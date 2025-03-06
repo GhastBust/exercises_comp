@@ -15,10 +15,10 @@ void printvec( Vec v)
     {
         printf("%e ", *(v.array + i));
     }
-}
+};
 
 
-Vec linspace(double a, double b, int n)
+Vec linspacee(double a, double b, int n)
 {
     double j;
     double* array = (double*) calloc( n+1, sizeof(double) );
@@ -32,11 +32,11 @@ Vec linspace(double a, double b, int n)
     } 
 
     return v;
-}
+};
 
 double intt(double a, double b, double (*f)(double), int n)
 {
-    Vec v = linspace(a, b, n);
+    Vec v = linspacee(a, b, n);
 
     double sum = 0;
     double h = *(v.array+1) - *v.array;
@@ -50,6 +50,6 @@ double intt(double a, double b, double (*f)(double), int n)
 
 
     return I;
-}
+};
 
 #endif

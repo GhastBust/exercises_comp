@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <math.h>
 #include "integral/integral.h"
+#include "output/output.h"
 
 
 double sin2(double x) { 
@@ -24,19 +25,32 @@ double x2e05( double x) {
 
 int main() {
 
-    double I;
 
-    I = intt(0.0, 1.0, sin2, 200);
-    printf("a = %e\n", I);
+    delete_and_open();
+    next_chapter("Capitolo 1", 'a');
+    next_sub();
+    next_sub();
+    next_sub();
+    next_sub();
+    next_chapter("CCAP 2", 'i');
+    next_sub();
+    next_sub();
+    next_sub();
 
-    I = intt(0.0, 1.0, x2sin2, 200);
-    printf("b = %e\n", I);
 
-    I = intt(0.0, 1.0, e05, 200);
-    printf("c = %e\n", 2-I);
+    // double I;
 
-    I = intt(0.0, 1.0, x2e05, 200);
-    printf("d = %e\n", 16-I);
+    // I = intt(0.0, 1.0, sin2, 200);
+    // printf("a = %e\n", I);
+
+    // I = intt(0.0, 1.0, x2sin2, 200);
+    // printf("b = %e\n", I);
+
+    // I = intt(0.0, 1.0, e05, 200);
+    // printf("c = %e\n", 2-I);
+
+    // I = intt(0.0, 1.0, x2e05, 200);
+    // printf("d = %e\n", 16-I);
 
     return 0;
 }
