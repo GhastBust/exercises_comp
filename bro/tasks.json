@@ -9,10 +9,6 @@
                 "-Wall",
                 "-g",
                 "${workspaceFolder}/src/**.c",
-                // "-I",
-                // "/usr/include/**",
-                // "/usr/lib/**",
-                // "${workspaceFolder}/src/**.h",
                 "-o",
                 "bin/main",
                 "-lm"
