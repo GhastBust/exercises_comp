@@ -1,10 +1,6 @@
 
-1) Capitolo 1
-  a)
-  b)
-  c)
-  d)
-2) CCAP 2
-  i)
-  ii)
-  iii)
+1) Integrali con il metodo del trapezio:
+  a) trap: 5.904465e-01,	simps: 5.925306e-01
+  b) trap: 2.861855e-01,	simps: 2.882335e-01
+  c) trap: 1.216086e+00,	simps: 1.214575e+00
+  d) trap: 1.577279e+01,	simps: 1.577130e+01

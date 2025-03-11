@@ -4,13 +4,14 @@
 
 #include "output.h"
 
-static void* file = 0;
+void* file = 0;
 static int chapter = 0;
 static int sub = 0;
 static char subfmt = 0;
 
-void delete_and_open(void) { 
+void* delete_and_open(void) { 
     file = fopen("results.txt", "w"); 
+    return file;
 };
 
 char* turn_num_to_roman(int n) {
@@ -104,7 +105,7 @@ void next_chapter(char* name, char sub_format)
     sub = 0;
     subfmt = sub_format ;
 
-    const int BUFFERSIZE = 40;
+    const int BUFFERSIZE = 100;
     char buffer[BUFFERSIZE];
     
     chapter += 1;
@@ -157,7 +158,7 @@ void next_sub(void)
         break;
     }
     
-    int size = snprintf(buffer, BUFFERSIZE, "\n  %s)", index_str); //* turn the chapter into string
+    int size = snprintf(buffer, BUFFERSIZE, "\n  %s) ", index_str); //* turn the chapter into string
 
     fwrite(buffer, sizeof(char), size, file);   //* write chapter into file
 }

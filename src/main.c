@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <math.h>
-#include "integral/integral.h"
+#include "trap/trap.h"
+#include "simpson/simpson.h"
 #include "output/output.h"
 
 
@@ -25,32 +26,36 @@ double x2e05( double x) {
 
 int main() {
 
+    void* file = delete_and_open();
 
-    delete_and_open();
-    next_chapter("Capitolo 1", 'a');
-    next_sub();
-    next_sub();
-    next_sub();
-    next_sub();
-    next_chapter("CCAP 2", 'i');
-    next_sub();
-    next_sub();
-    next_sub();
+    next_chapter("Integrali con il metodo del trapezio:", 'a');
+    double I;
 
+    next_sub();
+    I = int_trap(0.0, 1.0, sin2, 200);
+    fprintf(file, "trap: %e,\t", I);
+    I = int_simp(0.0, 1.0, sin2, 200);
+    fprintf(file, "simps: %e", I);
 
-    // double I;
+    next_sub();
+    I = int_trap(0.0, 1.0, x2sin2, 200);
+    fprintf(file, "trap: %e,\t", I);
+    I = int_simp(0.0, 1.0, x2sin2, 200);
+    fprintf(file, "simps: %e", I);
 
-    // I = intt(0.0, 1.0, sin2, 200);
-    // printf("a = %e\n", I);
+    next_sub();
+    I = int_trap(0.0, 1.0, e05, 200);
+    fprintf(file, "trap: %e,\t", 2-I);
+    I = int_simp(0.0, 1.0, e05, 200);
+    fprintf(file, "simps: %e", 2-I);
 
-    // I = intt(0.0, 1.0, x2sin2, 200);
-    // printf("b = %e\n", I);
+    next_sub();
+    I = int_trap(0.0, 1.0, x2e05, 200);
+    fprintf(file, "trap: %e,\t", 16-I);
+    I = int_simp(0.0, 1.0, x2e05, 200);
+    fprintf(file, "simps: %e", 16-I);
 
-    // I = intt(0.0, 1.0, e05, 200);
-    // printf("c = %e\n", 2-I);
-
-    // I = intt(0.0, 1.0, x2e05, 200);
-    // printf("d = %e\n", 16-I);
+    // fprintf("\n");
 
     return 0;
 }
