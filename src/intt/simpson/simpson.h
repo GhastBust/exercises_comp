@@ -2,7 +2,7 @@
 #define __SIMPSON_H__
 
 #include <malloc.h>
-#include "../vec/vec.h"
+#include "../../vec/vec.h"
 
 double int_simp(double a, double b, double (*f)(double), int n)
 {

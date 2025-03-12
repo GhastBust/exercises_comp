@@ -2,7 +2,7 @@
 #define __INTEGRAL_H__
 
 #include <malloc.h>
-#include "../vec/vec.h"
+#include "../../vec/vec.h"
 
 
 double int_trap(double a, double b, double (*f)(double), int n)
