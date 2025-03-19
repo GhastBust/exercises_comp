@@ -1,15 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <math.h>
 
 #include "output.h"
 
-void* file = 0;
+FILE* file = 0;
 static int chapter = 0;
 static int sub = 0;
 static char subfmt = 0;
 
-void* delete_and_open(void) { 
+static FILE* csv_file = 0;
+
+FILE* delete_and_open(void) { 
     file = fopen("results.txt", "w"); 
     return file;
 };
@@ -162,3 +165,16 @@ void next_sub(void)
 
     fwrite(buffer, sizeof(char), size, file);   //* write chapter into file
 }
+
+
+// void csv_open_write(char* name) {
+//     if (csv_file) {csv_close();}
+
+//     csv_file = fopen(name, "w");
+// };
+
+// void csv_write(double n) {
+//     if (!csv_file) {}
+// };
+// void csv_new_line(void);
+// void csv_close();

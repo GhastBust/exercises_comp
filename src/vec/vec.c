@@ -1,4 +1,3 @@
-
 #include "vec.h"
 
 void printvec( struct Vec v) 

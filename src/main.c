@@ -4,6 +4,8 @@
 #include "intt/simpson/simpson.h"
 #include "output/output.h"
 
+#include "diag/diag.h"
+
 
 double sin2(double x) { 
     double f = sin(2*x);
@@ -23,8 +25,7 @@ double x2e05( double x) {
     return x*x*e05(x);
 }
 
-
-int main() {
+void print_integrals() {
 
     void* file = delete_and_open();
 
@@ -54,8 +55,14 @@ int main() {
     fprintf(file, "trap: %e,\t", 16-I);
     I = int_simp(0.0, 1.0, x2e05, 200);
     fprintf(file, "simps: %e", 16-I);
+}
 
-    // fprintf("\n");
+
+int main() {
+
+    info("Questa è un info");
+    warning("Questo è un warning");
+    cricical("Errore critico");
 
     return 0;
 }

@@ -28,9 +28,9 @@ def msqrt(e: float ) -> float:
 
 def main():
 
-    from putils import graph
+    from putils import extract
 
-    
+    extract.csv_extract("../data/prova.csv")
 
     
     pass

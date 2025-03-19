@@ -1,35 +1,47 @@
-GTAGS = -fdiagnostics-color=always -Wall -g -Wextra 
-file ?= unnamed
+SHELL := /bin/bash
+GTAGS 	= -fdiagnostics-color=always -Wall -g -Wextra 
+# -I lib/**
+LTAGS 	= -fdiagnostics-color=always -Wall -Wextra
+libs 	= lib/libout.a
+file 	?= unnamed
 
-all: final
+cc = gcc
 
-main.o: src/main.c src/intt/trap/trap.h src/intt/simpson/simpson.h src/output/output.h 
-	@echo "Compiling main..."
-	@gcc $(GTAGS) -c src/main.c -o bin/main.o -lm
+all: clean final
 
-vec.o: src/vec/vec.c
-	@echo "Compiling vec..."
-	@gcc $(GTAGS) -c src/vec/vec.c -o bin/vec.o -lm
+final: test
 
-trap.o: src/intt/trap/trap.c src/vec/vec.c
-	@echo "Compiling trap..."
-	@gcc $(GTAGS) -c src/intt/trap/trap.c -o bin/trap.o -lm
+	@cd bin; \
+	oo=`find -type f -name '*.o'`; \
+	gcc $(GTAGS) $$oo -o final -lm
 
-simpson.o: src/intt/simpson/simpson.c src/vec/vec.c
-	@echo "Compiling simpson..."
-	@gcc $(GTAGS) -c src/intt/simpson/simpson.c -o bin/simpson.o -lm
 
-output.o: src/output/output.c 
-	@echo "Compiling output..."
-	@gcc $(GTAGS) -c src/output/output.c -o bin/output.o -lm
+LIB_FILES 	:= ${wildcard lib/*/*.c}
+LIB_OBJ		:= ${LIB_FILES:.c=.o}
 
-final: output.o trap.o simpson.o vec.o main.o
-	@echo "Compiling final executable..."
-	@gcc $(GTAGS) bin/output.o bin/simpson.o bin/trap.o bin/vec.o bin/main.o -o bin/final -lm
-	@echo "Done!"
+LIB_SUBS	:= ${wildcard lib/*/.}
 
-file: 
-#* per usare scrivere: "make file name=(nome)"
+lib/%.o: lib/%.c
+	gcc -c $(LTAGS) $< -o $@
+
+libs:  $(LIB_OBJ)
+	ar rcs lib/libout.a $(LIB_OBJ)
+
+test: 
+
+	@for i in $$(find ./src  -type f -name '*.c' ); do \
+    	str=$${i/#"./src"/bin}; \
+		oo=$${str/.c/.o}; \
+		# echo $$oo; \
+		if ! [[ -d `dirname $$oo` ]]; then \
+			mkdir -p `dirname $$oo`; \
+		fi; \
+		gcc $(GTAGS) -c $$i -o $$oo -lm; \
+	done 
+
+
+header: 
+#* per usare scrivere: "make header name=(nome)"
 #* e sostituire al posto di (nome) il nome della cartella
 #* make creerà una cartella con quel nome con due file dentro,
 #* un .c e un .h già con le cose essenziali scritte all'interno
@@ -38,6 +50,6 @@ file:
 	cd $(name); \
 	~/Workspace/C/header-writer/bin/final $(name); 
 
-clear:
+clean:
 	@echo "Removing binaries..."
-	rm bin/*
+	rm -r bin/*
