@@ -167,14 +167,26 @@ void next_sub(void)
 }
 
 
-// void csv_open_write(char* name) {
-//     if (csv_file) {csv_close();}
 
-//     csv_file = fopen(name, "w");
-// };
+void csv_open_write(char* name) {
+    if (csv_file) {csv_close();}
 
-// void csv_write(double n) {
-//     if (!csv_file) {}
-// };
-// void csv_new_line(void);
-// void csv_close();
+    csv_file = fopen(name, "w");
+};
+
+void csv_write(double n) {
+    if (!csv_file) {exit(EXIT_FAILURE);}
+
+    fprintf(csv_file, "%E, ", n);
+};
+
+
+void csv_new_line(void) {
+    if (!csv_file) {exit(EXIT_FAILURE);}
+
+    fprintf(csv_file, "\n");
+};
+
+void csv_close() {
+    fclose(csv_file);
+};
