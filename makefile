@@ -32,7 +32,6 @@ test:
 	@for i in $$(find ./src  -type f -name '*.c' ); do \
     	str=$${i/#"./src"/bin}; \
 		oo=$${str/.c/.o}; \
-		# echo $$oo; \
 		if ! [[ -d `dirname $$oo` ]]; then \
 			mkdir -p `dirname $$oo`; \
 		fi; \

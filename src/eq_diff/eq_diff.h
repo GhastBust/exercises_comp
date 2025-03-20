@@ -64,9 +64,9 @@ vec2 __attribute__ ((noinline)) trapezoids( double q0, double p0, double h ) {
     return f;
 }
 
-tqp euler( double q0, double p0 ) {
+// tqp euler( double q0, double p0 ) {
 
-}
+// }
 
 
 #endif//__EQ_DIFF_H__
