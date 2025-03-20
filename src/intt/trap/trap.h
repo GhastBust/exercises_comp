@@ -7,19 +7,19 @@
 
 double int_trap(double a, double b, double (*f)(double), int n)
 {
-    struct Vec v = linspacee(a, b, n);
+    Vec v = linspacee(a, b, n);
 
     double sum = 0;
-    double h = *(v.array+1) - *v.array;
+    double h = *(v.ptr+1) - *v.ptr;
 
-    for (int i = 1; i < v.len-1; i++)
+    for (unsigned i = 1; i < v.len-1; i++)
     {
-        sum += (*f)(*(v.array+i));
+        sum += (*f)(*(v.ptr+i));
     }
 
     double I = h/2 * ((*f)(a) + (*f)(b)) + h*sum;
 
-    free(v.array);
+    free(v.ptr);
 
     return I;
 };

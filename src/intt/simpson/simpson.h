@@ -6,15 +6,15 @@
 
 double int_simp(double a, double b, double (*f)(double), int n)
 {
-    struct Vec v = linspacee(a, b, 2*n);
+    Vec v = linspacee(a, b, 2*n);
 
     double sum = 0;
-    double h = *(v.array+1) - a;
+    double h = *(v.ptr+1) - a;
     double xi;
 
-    for (int i = 1; i < v.len-1; i++)
+    for (unsigned i = 1; i < v.len-1; i++)
     {
-        xi = *(v.array+i);
+        xi = *(v.ptr+i);
 
         switch (i%2)
         {

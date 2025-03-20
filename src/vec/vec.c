@@ -1,24 +1,67 @@
 #include "vec.h"
 
-void printvec( struct Vec v) 
+#include <stdio.h>
+#include <malloc.h>
+#include <memory.h>
+
+Vec vcreate(void) {
+    
+    unsigned cap = 50;
+    double* ptr = malloc( cap * sizeof(double) );
+    unsigned len = 0;
+
+    Vec v = {ptr, len, cap};
+
+    return v;
+};
+
+Vec vwith_cap( unsigned cap ) {
+    double* ptr = malloc( cap * sizeof(double) );
+    unsigned len = 0;
+
+    Vec v = {ptr, len, cap};
+
+    return v;
+};
+
+void vappend( Vec* v, double x) {
+
+    if ( v->len == v->cap ) { 
+        Vec v1 = vwith_cap(v->cap * 2);
+        memcpy(v1.ptr, v->ptr, v->cap * sizeof(double) );
+        destroy(*v);
+
+        *v = v1;
+    }
+
+    v->ptr[v->len] = x;
+
+    return;
+};
+
+void destroy( Vec v ) {
+    free(v.ptr);
+};
+
+
+void printvec( Vec v ) 
 {
-    for ( int i = 0; i < v.len; i++)
+    for ( unsigned i = 0; i < v.len; i++)
     {
-        printf("%e ", *(v.array + i));
+        printf("%e ", *(v.ptr + i));
     }
 };
 
-struct Vec linspacee(double a, double b, int n)
+Vec linspacee(double a, double b, int n)
 {
     double j;
-    double* array = (double*) calloc( n+1, sizeof(double) );
-    struct Vec v = {array, n+1};
+    Vec v = vwith_cap(n+1);
     
-    for (int i = 0; i < v.len; i++)
+    for (unsigned i = 0; i < v.len; i++)
     {
         j = (double)i / v.len;
 
-        *(v.array + i) = a * (1-j) + b*j;
+        *(v.ptr + i) = a * (1-j) + b*j;
     } 
 
     return v;

@@ -29,20 +29,21 @@ double f1(double x) {
 }
 
 void graph_and_write(char* name_of_file) {
+    
     csv_open_write(name_of_file);
 
-struct Vec a = linspacee (0, v, 4000);
-double x;
+    Vec a = linspacee (0, v, 4000);
+    double x;
 
-for (int i = 0; i < a.len; i++) {
-    x = a.array[i];
-    csv_write(x);
-    csv_write(f1(x));
-    csv_write(f2(x));
-    csv_new_line();
-}
+    for (unsigned i = 0; i < a.len; i++) {
+        x = a.ptr[i];
+        csv_write(x);
+        csv_write(f1(x));
+        csv_write(f2(x));
+        csv_new_line();
+    }
 
-csv_close();
+    csv_close();
 }
 
 double f1f2(double x) {

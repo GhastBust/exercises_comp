@@ -4,9 +4,9 @@
 #include "../vec/vec.h"
 
 typedef struct {
-    struct Vec t;
-    struct Vec q;
-    struct Vec p;
+    Vec t;
+    Vec q;
+    Vec p;
 } tqp;
 
 
