@@ -177,7 +177,7 @@ void csv_open_write(char* name) {
 void csv_write(double n) {
     if (!csv_file) {exit(EXIT_FAILURE);}
 
-    fprintf(csv_file, "%E, ", n);
+    fprintf(csv_file, "%.10E, ", n);
 };
 
 
@@ -189,4 +189,5 @@ void csv_new_line(void) {
 
 void csv_close() {
     fclose(csv_file);
+    csv_file = 0;
 };

@@ -27,7 +27,10 @@ Vec vwith_cap( unsigned cap ) {
 void vappend( Vec* v, double x) {
 
     if ( v->len == v->cap ) { 
+
         Vec v1 = vwith_cap(v->cap * 2);
+        v1.len = v->len;
+
         memcpy(v1.ptr, v->ptr, v->cap * sizeof(double) );
         destroy(*v);
 
@@ -35,6 +38,7 @@ void vappend( Vec* v, double x) {
     }
 
     v->ptr[v->len] = x;
+    v->len++;
 
     return;
 };

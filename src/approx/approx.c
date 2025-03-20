@@ -28,8 +28,12 @@ double f1(double x) {
     return -sqrt(x/(v-x));
 }
 
+double f1f2(double x) {
+    return f1(x) - f2(x);
+}
+
 void graph_and_write(char* name_of_file) {
-    
+
     csv_open_write(name_of_file);
 
     Vec a = linspacee (0, v, 4000);
@@ -42,42 +46,75 @@ void graph_and_write(char* name_of_file) {
         csv_write(f2(x));
         csv_new_line();
     }
-
+    
     csv_close();
 }
 
-double f1f2(double x) {
-    return f1(x) - f2(x);
-}
+void write_vec_to_file(char* name_of_file, Vec* vec) {
+    csv_open_write(name_of_file);
+    
+        Vec a = *vec;
+        double x;
+    
+        for (unsigned i = 0; i < a.len; i++) {
+            x = a.ptr[i];
+            csv_write(x);
+            csv_new_line();
+        }
+    
+    csv_close();
+};
+
 
 void bis(void) {
 
-    Option ress = bisect(f1f2, 0.0, v, 0.000001);
+    Vec vv = vcreate();
+
+    vappend(&vv, 0);
+    vappend(&vv, v);
+
+    Option ress = bisect(f1f2, 0.0, v, 1e-10, &vv);
 
     if (!ress.is_some) {
         printf("La bisezione non ha prodotto risultati.\n");
+        return;
     }
 
     double res = ress.value;
 
+    write_vec_to_file("bisection.csv", &vv);
+    
+
     printf("Il risultato della bisezione è:\n");
-    printf("%E\n", res);
+    printf("%.10E\n", res);
 
     return;
 }
 
 void nr(void) {
 
-    Option ress = newrap(f1f2, v-0.000001, 0.000001, clock());
+    const double x0 = v-0.000001;
+
+    Vec vv = vcreate();
+    vappend(&vv, x0);
+
+    Option ress = newrap(f1f2, x0, 1e-10, clock(), &vv);
 
     if (!ress.is_some) {
         printf("Newton-rapson non ha prodotto risultati.\n");
+        return;
     }
 
     double res = ress.value;
 
+    write_vec_to_file("newton-rapson.csv", &vv);
+
+    for (unsigned i = 0; i < vv.len; i++) {
+
+    }
+
     printf("Il risultato della newton-rapson è:\n");
-    printf("%E\n", res);
+    printf("%.10E\n", res);
 
     return;
 }
