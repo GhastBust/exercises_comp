@@ -22,46 +22,68 @@ typedef struct
     double p;
 } vec2;
 
+typedef struct mat2x2
+{
+    double a, b, c, d;
+} mat2x2;
 
-vec2 __attribute__ ((noinline)) euler0( double q0, double p0, double h ) {
-    double q1 = q0      + p0 * h/m;
-    double p1 = h*k* q0 + p0;
 
-    vec2 f = {q1, p1};
 
-    return f;
+
+vec2 mvmult( mat2x2 M, vec2 v ) {
+    double v1q = v.q * M.a + v.p * M.b;
+    double v1p = v.q * M.c + v.p * M.d;
+
+    vec2 v1 = {v1q, v1p};
+
+    return v1;
+};
+
+mat2x2 cmmult( double c, mat2x2 M) {
+    mat2x2 M1 = {M.a * c, M.b * c, M.c * c, M.d * c};
+
+    return M1;
 }
 
-vec2 __attribute__ ((noinline)) euler1( double q0, double p0, double h ) {
+
+vec2 cvmult( double c, vec2 v )
+{
+    vec2 v1 = {v.q * c, v.p * c};
+
+    return v1;
+};
+
+
+vec2 step_euler0( vec2 qp, double h ) {
+
+    mat2x2 M = {1, h/m, h*k, 1};
     
-    double C = 1 / ( 1 + h * h * k / m );
-
-    double q1 = q0      + h/m * p0;
-    double p1 = -h*k*q0 + p0;
-
-    q1 *= C;
-    p1 *= C;
-
-    vec2 f = {q1, p1};
-
-    return f;
+    return mvmult(M, qp);
 }
 
-vec2 __attribute__ ((noinline)) trapezoids( double q0, double p0, double h ) {
+vec2 step_euler1( vec2 qp, double h ) {
+    
+    double C = 1 /(1 + h *h *k /m);
+
+    mat2x2 M = {1, h/m, -h*k, 1};
+
+    vec2 v1 = mvmult(M, qp);
+    v1      = cvmult(C, v1);
+
+    return v1;
+}
+
+vec2 step_trapezoids( vec2 qp, double h ) {
 
     double h2 = h*h;
     double den = 4*m+k*h2;
 
-    double lambda = (4*m - k*h2) / den;
-    double lambda1 = 4*h / den;
-    double lambda2 = -4*m*k*h / den;
+    mat2x2 M = {4*m - k*h2, 4*h, -4*m*k*h, 4*m - k*h2};
 
-    double q1 = q0 * lambda  + p0 * lambda1;
-    double p1 = q0 * lambda2 + p0 * lambda;
+    vec2 v1 = mvmult(M, qp);
+    v1 = cvmult(1/den, v1);
 
-    vec2 f = {q1, p1};
-
-    return f;
+    return v1;
 }
 
 // tqp euler( double q0, double p0 ) {
