@@ -1,10 +1,9 @@
-import g_raph
-import g_raph.g_raph
+from g_raph import g_raph
 
 
 def main():
  
-    g_raph.g_raph.graph_iterations_methods()
+    g_raph.graph_iterations_methods()
 
 
 

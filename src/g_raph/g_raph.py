@@ -51,13 +51,13 @@ def graph_solution_ctn_sqrt():
 
 def graph_iterations_methods():
 
-    a = extract("bisection.csv")
+    a = extract("data/bisection.csv")
     bis = np.array(a[0])
 
-    a = extract("newton-rapson.csv")
+    a = extract("data/newton-rapson.csv")
     nr = np.array(a[0])
 
-    sol = 0.190408573835450875655341432704267102747
+    sol = 0.190408573835450875655341432704267102747 * 11.133474484828408
 
     bis = np.abs(bis - sol)
     nr  = np.abs(nr - sol) 
@@ -74,5 +74,5 @@ def graph_iterations_methods():
 
     axes.set_yscale("log")
 
-    fig.polish()
+    fig.polish(save_name="bis-newrap", save_format="png", show=True)
 

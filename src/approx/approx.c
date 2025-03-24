@@ -10,15 +10,15 @@
 #include "newrap/newrap.h"
 
 
-const double R = 1.93;
-const double Mn = 939.565;
-const double Mp = 938.272;
-const double c = 299792458;
-const double uc2 = Mn*Mp/(Mn+Mp);
-const double hc = 197.327;
-const double V0 = 38.5;
-const double lambda = hc*hc/2/uc2/R/R;
-const double v = V0 / lambda;
+static const double R = 1.93;
+static const double Mn = 939.565;
+static const double Mp = 938.272;
+// static const double c = 299792458;
+static const double uc2 = Mn*Mp/(Mn+Mp);
+static const double hc = 197.327;
+static const double V0 = 38.5;
+static const double lambda = hc*hc/2/uc2/R/R;
+static const double v = V0 / lambda;
 
 double f2(double x) {
     return 1/tan(sqrt(v-x));
@@ -71,9 +71,9 @@ void bis(void) {
     Vec vv = vcreate();
 
     vappend(&vv, 0);
-    vappend(&vv, v);
+    vappend(&vv, v*lambda);
 
-    Option ress = bisect(f1f2, 0.0, v, 1e-10, &vv);
+    Option ress = bisect(f1f2, 0.0, v, 1e-12, &vv);
 
     if (!ress.is_some) {
         printf("La bisezione non ha prodotto risultati.\n");
@@ -82,11 +82,11 @@ void bis(void) {
 
     double res = ress.value;
 
-    write_vec_to_file("bisection.csv", &vv);
+    write_vec_to_file("data/bisection.csv", &vv);
     
 
     printf("Il risultato della bisezione è:\n");
-    printf("%.10E\n", res);
+    printf("%.13E\n", res*lambda);
 
     return;
 }
@@ -96,9 +96,9 @@ void nr(void) {
     const double x0 = v-0.000001;
 
     Vec vv = vcreate();
-    vappend(&vv, x0);
+    vappend(&vv, x0*lambda);
 
-    Option ress = newrap(f1f2, x0, 1e-10, clock(), &vv);
+    Option ress = newrap(f1f2, x0, 1e-12, clock(), &vv);
 
     if (!ress.is_some) {
         printf("Newton-rapson non ha prodotto risultati.\n");
@@ -107,14 +107,14 @@ void nr(void) {
 
     double res = ress.value;
 
-    write_vec_to_file("newton-rapson.csv", &vv);
+    write_vec_to_file("data/newton-rapson.csv", &vv);
 
     for (unsigned i = 0; i < vv.len; i++) {
 
     }
 
     printf("Il risultato della newton-rapson è:\n");
-    printf("%.10E\n", res);
+    printf("%.13E\n", res*lambda);
 
     return;
 }
