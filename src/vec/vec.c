@@ -32,7 +32,7 @@ void vappend( Vec* v, double x) {
         v1.len = v->len;
 
         memcpy(v1.ptr, v->ptr, v->cap * sizeof(double) );
-        destroy(*v);
+        destroy(v);
 
         *v = v1;
     }
@@ -43,8 +43,11 @@ void vappend( Vec* v, double x) {
     return;
 };
 
-void destroy( Vec v ) {
-    free(v.ptr);
+void destroy( Vec* v ) {
+    free(v->ptr);
+    v->ptr = 0;
+    v->len = 0;
+    v->cap = 0;
 };
 
 
@@ -61,11 +64,11 @@ Vec linspacee(double a, double b, int n)
     double j;
     Vec v = vwith_cap(n+1);
     
-    for (unsigned i = 0; i < v.len; i++)
+    for (unsigned i = 0; i < v.cap; i++)
     {
         j = (double)i / v.len;
 
-        *(v.ptr + i) = a * (1-j) + b*j;
+        vappend(&v,  a * (1-j) + b*j);
     } 
 
     return v;

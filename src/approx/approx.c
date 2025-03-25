@@ -9,16 +9,7 @@
 #include "bisection/bisection.h"
 #include "newrap/newrap.h"
 
-
-static const double R = 1.93;
-static const double Mn = 939.565;
-static const double Mp = 938.272;
-// static const double c = 299792458;
-static const double uc2 = Mn*Mp/(Mn+Mp);
-static const double hc = 197.327;
-static const double V0 = 38.5;
-static const double lambda = hc*hc/2/uc2/R/R;
-static const double v = V0 / lambda;
+#include "fconst.h"
 
 double f2(double x) {
     return 1/tan(sqrt(v-x));

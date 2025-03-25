@@ -2,12 +2,7 @@
 
 #include <math.h>
 
-static const double R = 1.93;
-static const double Mn = 939.565;
-static const double Mp = 938.272;
-static const double uc2 = Mn*Mp/(Mn+Mp);
-static const double hc = 197.327;
-static const double lambda = hc*hc/2/uc2/R/R;
+#include "../fconst.h"
 
 double der(double (*f)(double), double x, double h) {
 

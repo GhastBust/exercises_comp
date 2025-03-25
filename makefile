@@ -36,7 +36,7 @@ test:
 			mkdir -p `dirname $$oo`; \
 		fi; \
 		gcc $(GTAGS) -c $$i -o $$oo -lm; \
-	done 
+		done
 
 
 header: 
@@ -47,8 +47,8 @@ header:
 	@cd src; \
 	[[ -d $(name) ]] || mkdir $(name); \
 	cd $(name); \
-	~/Workspace/C/header-writer/bin/final $(name); 
+	~/Workspace/C/header-writer/bin/final $(name) 
 
 clean:
 	@echo "Removing binaries..."
-	rm -r bin/*
+	rm -r -f bin/*
