@@ -31,7 +31,7 @@ double int_simp(double a, double b, double (*f)(double), int n)
 
     double I = h/3 * ( fa + fb + sum );
 
-    destroy(&v);
+    vdestroy(&v);
 
     return I;
 };

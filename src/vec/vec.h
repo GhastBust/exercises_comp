@@ -11,7 +11,7 @@ typedef struct Vec
 Vec vcreate(void);
 Vec vwith_cap( unsigned cap );
 void vappend( Vec* v, double x );
-void destroy( Vec* v);
+void vdestroy( Vec* v);
 
 void printvec( Vec v);
 Vec linspacee(double a, double b, int n);

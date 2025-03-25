@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <malloc.h>
 #include <memory.h>
+#include <math.h>
 
 Vec vcreate(void) {
     
@@ -32,7 +33,7 @@ void vappend( Vec* v, double x) {
         v1.len = v->len;
 
         memcpy(v1.ptr, v->ptr, v->cap * sizeof(double) );
-        destroy(v);
+        vdestroy(v);
 
         *v = v1;
     }
@@ -43,7 +44,7 @@ void vappend( Vec* v, double x) {
     return;
 };
 
-void destroy( Vec* v ) {
+void vdestroy( Vec* v ) {
     free(v->ptr);
     v->ptr = 0;
     v->len = 0;
@@ -59,8 +60,7 @@ void printvec( Vec v )
     }
 };
 
-Vec linspacee(double a, double b, int n)
-{
+Vec linspacee(double a, double b, int n) {
     double j;
     Vec v = vwith_cap(n+1);
     
@@ -68,7 +68,21 @@ Vec linspacee(double a, double b, int n)
     {
         j = (double)i / v.cap;
 
-        vappend(&v, a * (1-j) + b*j);
+        vappend(&v, a + (b-a)*j);
+    } 
+
+    return v;
+}
+
+Vec logspacee(double a, double b, int n) {
+    double j;
+    Vec v = vwith_cap(n+1);
+    
+    for (unsigned i = 0; i < v.cap; i++)
+    {
+        j = (double)i / v.cap;
+
+        vappend(&v, a * pow(b/a,j) );
     } 
 
     return v;
