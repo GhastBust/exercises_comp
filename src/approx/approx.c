@@ -62,9 +62,9 @@ void bis(void) {
     Vec vv = vcreate();
 
     vappend(&vv, 0);
-    vappend(&vv, v*lambda);
+    vappend(&vv, v);
 
-    Option ress = bisect(f1f2, 0.0, v, 1e-12, &vv);
+    Option ress = bisect(f1f2, 0, v, 1e-12, &vv);
 
     if (!ress.is_some) {
         printf("La bisezione non ha prodotto risultati.\n");
@@ -87,7 +87,7 @@ void nr(void) {
     const double x0 = v-0.000001;
 
     Vec vv = vcreate();
-    vappend(&vv, x0*lambda);
+    vappend(&vv, x0);
 
     Option ress = newrap(f1f2, x0, 1e-12, clock(), &vv);
 

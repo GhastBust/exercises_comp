@@ -35,18 +35,20 @@ def extract(file):
 
 def graph_solution_ctn_sqrt():
 
-    a = extract("ctn_sqrt.csv")
+    a = extract("data/ctn_sqrt.csv")
 
-    x = a[0]
-    y1 = a[1]
-    y2 = a[2]
+    ex = 300
 
-    fig = putils.graph.PFig(None, "Titolo", "x", "y")
+    x = np.array(a[0][:-ex]) * 11.133474484828408
+    y1 = a[1][:-ex]
+    y2 = a[2][:-ex]
 
-    fig.data(x, y1, label="y1", shape=".", linestyle= "")
-    fig.data(x, y2, label="y2", shape=".", linestyle= "")
+    fig = putils.graph.PFig(pyplot.figure(), "Risoluzione Grafica", "Energia [MeV]", "f(e)")
+
+    fig.data(x, y1, label=r"$-\sqrt{\frac{e}{v-e}}$", shape=".", linestyle= "-")
+    fig.data(x, y2, label=r"$\cot{\sqrt{v-e}}$", shape=".", linestyle= "-")
     
-    fig.polish()
+    fig.polish(save_name="solutions_ctn_sqrt", save_format="all", legend_position="lower left", show= True)
 
 
 def graph_iterations_methods():
@@ -65,14 +67,14 @@ def graph_iterations_methods():
     # bis = np.log10(bis)
     # nr  = np.log10(nr)
 
-    fig = putils.graph.PFig(None, "Differenza tra approx. e soluzione", "Iterazioni", "Differenza")
+    fig = putils.graph.PFig(pyplot.figure(), "Differenza tra approx. e soluzione", "Iterazioni", "Differenza")
 
     fig.data(np.arange(len(bis)), bis, label="Bisezione", shape=".", linestyle= "-")
-    fig.data(np.arange(len(nr )), nr , label="Newton-Rapson", shape=".", linestyle= "-")
+    fig.data(np.arange(len(nr )), nr , label="Secanti", shape=".", linestyle= "-")
 
     axes = pyplot.gca()
 
     axes.set_yscale("log")
 
-    fig.polish(save_name="bis-newrap", save_format="png", show=True)
+    fig.polish(save_name="bis-newrap", save_format="all", show=True)
 

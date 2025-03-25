@@ -46,7 +46,7 @@ void vappend( Vec* v, double x) {
 
 void vdestroy( Vec* v ) {
     free(v->ptr);
-    v->ptr = 0;
+    v->ptr = NULL;
     v->len = 0;
     v->cap = 0;
 };

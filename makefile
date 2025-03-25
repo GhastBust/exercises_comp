@@ -15,17 +15,21 @@ final: test
 	oo=`find -type f -name '*.o'`; \
 	gcc $(GTAGS) $$oo -o final -lm
 
+update_libs:
 
-LIB_FILES 	:= ${wildcard lib/*/*.c}
-LIB_OBJ		:= ${LIB_FILES:.c=.o}
+# /home/saturn/Workspace/C/putils/dist/putils-1.0.5.tar.gz
 
-LIB_SUBS	:= ${wildcard lib/*/.}
 
-lib/%.o: lib/%.c
-	gcc -c $(LTAGS) $< -o $@
+# LIB_FILES 	:= ${wildcard lib/*/*.c}
+# LIB_OBJ		:= ${LIB_FILES:.c=.o}
 
-libs:  $(LIB_OBJ)
-	ar rcs lib/libout.a $(LIB_OBJ)
+# LIB_SUBS	:= ${wildcard lib/*/.}
+
+# lib/%.o: lib/%.c
+# 	gcc -c $(LTAGS) $< -o $@
+
+# libs:  $(LIB_OBJ)
+# 	ar rcs lib/libout.a $(LIB_OBJ)
 
 test: 
 
