@@ -6,6 +6,7 @@
 #include "wave_func/wave_func.h"
 
 #include "approx/fconst.h"
+#include "intt/simpson/simpson.h"
 
 
 // void approx_bis_new_rap() {
@@ -29,12 +30,11 @@
 // }
 
 
-
 int main() {
 
-    double k = sqrt(2*uc2*(V0 - E)/hc/hc);
+    double k = sqrt(2*uc2*(V0 + E)/hc/hc);
     double q = sqrt(-2*uc2*E/hc/hc);
-    double A = 100;
+    double A = 0.5611;
     double B = A * sin(k*R) / exp(-q*R);
     double remainder1 = B*B/4/q/q/q;
     double remainder2 = B*B/2/q;
@@ -45,6 +45,8 @@ int main() {
     printf("B = %.12E\n", B);
     printf("remainder1 = %.12E\n", remainder1);
     printf("remainder2 = %.12E\n", remainder2);
+
+    // printf("Integral is: %.4f\n", int_simp(0, 1, ap, 20000));
 
 
     printf("<r²> = %.10E\n", mean_r2());

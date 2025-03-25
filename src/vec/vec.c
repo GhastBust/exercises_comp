@@ -66,9 +66,9 @@ Vec linspacee(double a, double b, int n)
     
     for (unsigned i = 0; i < v.cap; i++)
     {
-        j = (double)i / v.len;
+        j = (double)i / v.cap;
 
-        vappend(&v,  a * (1-j) + b*j);
+        vappend(&v, a * (1-j) + b*j);
     } 
 
     return v;

@@ -12,12 +12,12 @@
 // double remainder1 = B*B/4/q/q/q;
 // double remainder2 = B*B/2/q;
 
-const double k = 9.896845828952E-01;
+const double k = 9.366109318822E-01;
 const double q = 2.260923880842E-01;
-const double A = 1.000000000000E+00;
-const double B = 1.458864289061E+00;
-const double remainder1 = 4.603752550284E+01;
-const double remainder2 = 4.706671091256E+00;
+const double A = 5.611000000000E-01;
+const double B = 8.438199718631E-01;
+const double remainder1 = 1.540216550712E+01;
+const double remainder2 = 1.574648644629E+00;
 
 double wave1(double r) { return A * sin(k*r); }
 double wave2(double r) { return B * exp(-q*r); }
@@ -53,9 +53,9 @@ double u2(double r) {
 
 double mean_r2() {
 
-    double numerator = remainder1 + int_simp(0, R, r2_u2, 2000);
+    double numerator = remainder1 + int_simp(0, R, r2_u2, 200000);
 
-    double denominator = remainder2 + int_simp(0, R, u2, 2000);
+    double denominator = remainder2 + int_simp(0, R, u2, 200000);
 
     return numerator / denominator;
 
