@@ -1,9 +1,12 @@
 SHELL := /bin/bash
 GTAGS 	= -fdiagnostics-color=always -Wall -g -Wextra 
-# -I lib/**
 LTAGS 	= -fdiagnostics-color=always -Wall -Wextra
 libs 	= lib/libout.a
 file 	?= unnamed
+ver     ?= NaN
+
+token2 = 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
+token = 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
 
 cc = gcc
 
@@ -15,21 +18,9 @@ final: test
 	oo=`find -type f -name '*.o'`; \
 	gcc $(GTAGS) $$oo -o final -lm
 
-update_libs:
+ulibs:
 
-# /home/saturn/Workspace/C/putils/dist/putils-1.0.5.tar.gz
-
-
-# LIB_FILES 	:= ${wildcard lib/*/*.c}
-# LIB_OBJ		:= ${LIB_FILES:.c=.o}
-
-# LIB_SUBS	:= ${wildcard lib/*/.}
-
-# lib/%.o: lib/%.c
-# 	gcc -c $(LTAGS) $< -o $@
-
-# libs:  $(LIB_OBJ)
-# 	ar rcs lib/libout.a $(LIB_OBJ)
+	.venv/bin/pip install git+https://username:$(token2)@github.com/GhastBust/putils.git
 
 test: 
 
