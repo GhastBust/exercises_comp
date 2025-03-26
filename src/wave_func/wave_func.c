@@ -22,11 +22,6 @@ const double remainder2 = 1.574648644629E+00;
 double wave1(double r) { return A * sin(k*r); }
 double wave2(double r) { return B * exp(-q*r); }
 
-// double wave_func_u(double r) {
-//     if (r > R) { return wave1(r); }
-//     if (r <=R) { return wave2(r); }
-//     return 0;
-// };
 
 
 double r2_u2(double r) {

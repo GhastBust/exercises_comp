@@ -16,24 +16,6 @@ void write_vec_to_file(char* name_of_file, Vec* vec);
 void bis(void);
 void nr(void);
 
-void approx_bis_new_rap() {
-
-    clock_t start;
-    clock_t end;
-    
-    start = clock();
-    bis();
-    end = clock();
-    
-    printf("Il metodo di bisezione ci ha messo %ld us\n", (end-start));
-    
-    start = clock();
-    nr();
-    end = clock();
-    
-    printf("Il metodo di newton-rapson ci ha messo %ld us\n", (end-start));
-
-    return;
-}
+void approx_bis_new_rap();
 
 #endif//__APPROX_H__

@@ -43,7 +43,7 @@ def graph_solution_ctn_sqrt():
     y1 = a[1][:-ex]
     y2 = a[2][:-ex]
 
-    fig = putils.graph.PFig(pyplot.figure(), "Risoluzione Grafica", "Energia [MeV]", "f(e)")
+    fig = putils.graph.PFig(pyplot.figure(), "Risoluzione Grafica", "Energia [MeV]", "f(E)")
 
     fig.data(x, y1, label=r"$-\sqrt{\frac{e}{v-e}}$", shape=".", linestyle= "-")
     fig.data(x, y2, label=r"$\cot{\sqrt{v-e}}$", shape=".", linestyle= "-")

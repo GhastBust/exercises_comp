@@ -110,3 +110,22 @@ void nr(void) {
     return;
 }
 
+void approx_bis_new_rap() {
+
+    clock_t start;
+    clock_t end;
+    
+    start = clock();
+    bis();
+    end = clock();
+    
+    printf("Il metodo di bisezione ci ha messo %ld us\n", (end-start));
+    
+    start = clock();
+    nr();
+    end = clock();
+    
+    printf("Il metodo di newton-rapson ci ha messo %ld us\n", (end-start));
+
+    return;
+}
