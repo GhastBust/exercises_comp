@@ -1,6 +1,9 @@
 SHELL := /bin/bash
 GTAGS 	= -fdiagnostics-color=always -Wall -g -Wextra 
+# `gsl-config --cflags --libs`
 LTAGS 	= -fdiagnostics-color=always -Wall -Wextra
+LINKS = -lgsl -lgslcblas -lm
+
 libs 	= lib/libout.a
 file 	?= unnamed
 ver     ?= NaN
@@ -16,7 +19,7 @@ final: test
 
 	@cd bin; \
 	oo=`find -type f -name '*.o'`; \
-	gcc $(GTAGS) $$oo -o final -lm
+	gcc $(GTAGS) $$oo -o final $(LINKS)
 
 ulibs:
 
@@ -30,7 +33,7 @@ test:
 		if ! [[ -d `dirname $$oo` ]]; then \
 			mkdir -p `dirname $$oo`; \
 		fi; \
-		gcc $(GTAGS) -c $$i -o $$oo -lm; \
+		gcc $(GTAGS) -c $$i -o $$oo $(LINKS);  \
 		done
 
 

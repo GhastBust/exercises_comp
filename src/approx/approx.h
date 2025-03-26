@@ -11,7 +11,7 @@ double f1(double x);
 double f1f2(double x);
 
 void graph_and_write(char* name_of_file);
-void write_vec_to_file(char* name_of_file, Vec* vec);
+void write_vec_to_file(char* name_of_file, vec* vec);
 
 void bis(void);
 void nr(void);

@@ -4,7 +4,7 @@
 
 double int_simp(double a, double b, double (*f)(double), int n)
 {
-    Vec v = linspacee(a, b, 2*n);
+    vec v = linspacee(a, b, 2*n);
 
     double sum = 0;
     double h = v.ptr[1] - a;

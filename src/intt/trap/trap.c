@@ -4,7 +4,7 @@
 
 double int_trap(double a, double b, double (*f)(double), int n)
 {
-    Vec v = linspacee(a, b, n);
+    vec v = linspacee(a, b, n);
 
     double sum = 0;
     double h = v.ptr[1] - a;

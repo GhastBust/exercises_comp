@@ -4,6 +4,6 @@
 #include "../../option/option.h"
 #include "../../vec/vec.h"
 
-Option bisect(double (*f)(double), double a, double b, double e, Vec* results);
+Option bisect(double (*f)(double), double a, double b, double e, vec* results);
 
 #endif//__BISECTION_H__

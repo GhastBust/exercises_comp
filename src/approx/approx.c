@@ -27,7 +27,7 @@ void graph_and_write(char* name_of_file) {
 
     csv_open_write(name_of_file);
 
-    Vec a = linspacee (0, v, 4000);
+    vec a = linspacee (0, v, 4000);
     double x;
 
     for (unsigned i = 0; i < a.len; i++) {
@@ -41,10 +41,10 @@ void graph_and_write(char* name_of_file) {
     csv_close();
 }
 
-void write_vec_to_file(char* name_of_file, Vec* vec) {
+void write_vec_to_file(char* name_of_file, vec* v) {
     csv_open_write(name_of_file);
     
-        Vec a = *vec;
+        vec a = *v;
         double x;
     
         for (unsigned i = 0; i < a.len; i++) {
@@ -59,7 +59,7 @@ void write_vec_to_file(char* name_of_file, Vec* vec) {
 
 void bis(void) {
 
-    Vec vv = vcreate();
+    vec vv = vcreate();
 
     vappend(&vv, 0);
     vappend(&vv, v);
@@ -86,7 +86,7 @@ void nr(void) {
 
     const double x0 = v-0.000001;
 
-    Vec vv = vcreate();
+    vec vv = vcreate();
     vappend(&vv, x0);
 
     Option ress = newrap(f1f2, x0, 1e-12, clock(), &vv);

@@ -5,9 +5,9 @@
 #include "../matr/matr.h"
 
 typedef struct {
-    Vec t;
-    Vec q;
-    Vec p;
+    vec t;
+    vec q;
+    vec p;
 } tqp;
 
 

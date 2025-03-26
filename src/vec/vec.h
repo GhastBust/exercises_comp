@@ -1,20 +1,20 @@
 #ifndef __VEC_H__
 #define __VEC_H__
 
-typedef struct Vec
+typedef struct vec
 {
     double* ptr;
     unsigned len;
     unsigned cap;
-} Vec;
+} vec;
 
-Vec vcreate(void);
-Vec vwith_cap( unsigned cap );
-void vappend( Vec* v, double x );
-void vdestroy( Vec* v);
+vec vcreate(void);
+vec vwith_cap( unsigned cap );
+void vappend( vec* v, double x );
+void vdestroy( vec* v);
 
-void printvec( Vec v);
-Vec linspacee(double a, double b, int n);
-Vec logspacee(double a, double b, int n);
+void printvec( vec v);
+vec linspacee(double a, double b, int n);
+vec logspacee(double a, double b, int n);
 
 #endif //__VEC_H__

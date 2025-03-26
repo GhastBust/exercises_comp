@@ -12,7 +12,7 @@ double der(double (*f)(double), double x, double h) {
     return (f2-f1)/2/h;
 };
 
-Option newrap(double (*f)(double), double x, double e, clock_t start, Vec* results ){
+Option newrap(double (*f)(double), double x, double e, clock_t start, vec* results ){
 
     if (clock() - start >= 1 * CLOCKS_PER_SEC ) {return None;}
     if (fabs(x) > 1e20) return None;

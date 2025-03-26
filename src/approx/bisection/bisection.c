@@ -1,7 +1,7 @@
 #include "bisection.h"
 
 
-Option bisect(double (*f)(double), double a, double b, double e, Vec* results) {
+Option bisect(double (*f)(double), double a, double b, double e, vec* results) {
 
     if ((*f)(a)*(*f)(b) > 0)  {return None;}
     

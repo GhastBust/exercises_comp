@@ -5,31 +5,31 @@
 #include <memory.h>
 #include <math.h>
 
-Vec vcreate(void) {
+vec vcreate(void) {
     
     unsigned cap = 50;
     double* ptr = malloc( cap * sizeof(double) );
     unsigned len = 0;
 
-    Vec v = {ptr, len, cap};
+    vec v = {ptr, len, cap};
 
     return v;
 };
 
-Vec vwith_cap( unsigned cap ) {
+vec vwith_cap( unsigned cap ) {
     double* ptr = malloc( cap * sizeof(double) );
     unsigned len = 0;
 
-    Vec v = {ptr, len, cap};
+    vec v = {ptr, len, cap};
 
     return v;
 };
 
-void vappend( Vec* v, double x) {
+void vappend( vec* v, double x) {
 
     if ( v->len == v->cap ) { 
 
-        Vec v1 = vwith_cap(v->cap * 2);
+        vec v1 = vwith_cap(v->cap * 2);
         v1.len = v->len;
 
         memcpy(v1.ptr, v->ptr, v->cap * sizeof(double) );
@@ -44,7 +44,7 @@ void vappend( Vec* v, double x) {
     return;
 };
 
-void vdestroy( Vec* v ) {
+void vdestroy( vec* v ) {
     free(v->ptr);
     v->ptr = NULL;
     v->len = 0;
@@ -52,7 +52,7 @@ void vdestroy( Vec* v ) {
 };
 
 
-void printvec( Vec v ) 
+void printvec( vec v ) 
 {
     for ( unsigned i = 0; i < v.len; i++)
     {
@@ -60,9 +60,9 @@ void printvec( Vec v )
     }
 };
 
-Vec linspacee(double a, double b, int n) {
+vec linspacee(double a, double b, int n) {
     double j;
-    Vec v = vwith_cap(n+1);
+    vec v = vwith_cap(n+1);
     
     for (unsigned i = 0; i < v.cap; i++)
     {
@@ -74,9 +74,9 @@ Vec linspacee(double a, double b, int n) {
     return v;
 }
 
-Vec logspacee(double a, double b, int n) {
+vec logspacee(double a, double b, int n) {
     double j;
-    Vec v = vwith_cap(n+1);
+    vec v = vwith_cap(n+1);
     
     for (unsigned i = 0; i < v.cap; i++)
     {
