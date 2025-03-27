@@ -1,5 +1,6 @@
 SHELL := /bin/bash
-GTAGS 	= -fdiagnostics-color=always -Wall -g -Wextra 
+DBGTAGS = -fdiagnostics-color=always -Wall -g -Wextra 
+RLSTAGS 	= -fdiagnostics-color=always -Wall -O3 -Wextra 
 # `gsl-config --cflags --libs`
 LTAGS 	= -fdiagnostics-color=always -Wall -Wextra
 LINKS = -lgsl -lgslcblas -lm
@@ -15,17 +16,31 @@ cc = gcc
 
 all: clean final
 
-final: test
+final: release
 
 	@cd bin; \
 	oo=`find -type f -name '*.o'`; \
-	gcc $(GTAGS) $$oo -o final $(LINKS)
+	gcc $(RLSTAGS) $$oo -o final $(LINKS)
 
 ulibs:
 
 	.venv/bin/pip install git+https://username:$(token2)@github.com/GhastBust/putils.git
 
-test: 
+dbg: 
+	@for i in $$(find ./src  -type f -name '*.c' ); do \
+    	str=$${i/#"./src"/bin}; \
+		oo=$${str/.c/.o}; \
+		if ! [[ -d `dirname $$oo` ]]; then \
+			mkdir -p `dirname $$oo`; \
+		fi; \
+		gcc $(DBGTAGS) -c $$i -o $$oo $(LINKS);  \
+		done
+	@cd bin; \
+	oo=`find -type f -name '*.o'`; \
+	gcc $(DBGTAGS) $$oo -o final $(LINKS)
+
+
+release: 
 
 	@for i in $$(find ./src  -type f -name '*.c' ); do \
     	str=$${i/#"./src"/bin}; \
@@ -33,7 +48,7 @@ test:
 		if ! [[ -d `dirname $$oo` ]]; then \
 			mkdir -p `dirname $$oo`; \
 		fi; \
-		gcc $(GTAGS) -c $$i -o $$oo $(LINKS);  \
+		gcc $(RLSTAGS) -c $$i -o $$oo $(LINKS);  \
 		done
 
 

@@ -78,3 +78,44 @@ def graph_iterations_methods():
 
     fig.polish(save_name="bis-newrap", save_format="all", show=True)
 
+
+
+def graph_star_radius_mass(): 
+
+    files = [
+        "gamma5-3.csv",
+        "gamma4-3.csv",
+        "gamma2.54.csv"
+    ]
+
+    labels = [ 
+        r"$\Gamma = \frac{5}{3}$",
+        r"$\Gamma = \frac{4}{3}$",
+        r"$\Gamma = 2.54$"
+    ]
+
+    colors = [
+        "red",
+        "olivedrab",
+        "blue",
+    ]
+
+    fig = putils.graph.PFig( pyplot.figure(), "Raggio e massa solare a confronto", "Raggio [Km]", r"Massa [$M_{\odot}$]")
+
+    from os.path import join
+
+    for (file, label, color) in zip(files, labels, colors):
+
+        a = extract(join("data", file))
+
+        r = np.array( a[0] )
+        m = np.array( a[1] )
+
+        fig.data(r, m, label=label, color= color, linestyle="-")
+
+    axes = pyplot.gca()
+
+    axes.set_xscale("log")
+    axes.set_yscale("log")
+
+    fig.polish()

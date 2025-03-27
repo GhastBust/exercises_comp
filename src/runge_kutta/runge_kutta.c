@@ -2,6 +2,7 @@
 
 #include <math.h>
 #include <stdio.h>
+#include <string.h>
 
 vec3 next_rk_step( vec3 v, double(*f)(vec3), double(*g)(vec3), double h ) {
 
@@ -58,13 +59,29 @@ txyvec  exe_runge_kutta( vec3 initial, double final, double(*f)(vec3), double(*g
     return results;
 };
 
-void  vvvprint(txyvec v) {
+void  vvvprint( txyvec v, char* format, char* sep ) {
 
     int minn = fmin(v.t.len, v.x.len);
     minn = fmin(minn, v.y.len);
 
-    for (int i = 0; i < minn; i++){
-        printf("%E, %E, %E\n", v.t.ptr[i], v.x.ptr[i], v.y.ptr[i]);
+    if ( sep == NULL ) {
+        for (int i = 0; i < minn; i++){ 
+            printf(format, v.t.ptr[i], v.x.ptr[i], v.y.ptr[i]);
+            printf("\n");
+        }
+        return;
     }
+
+    for (int i = 0; i < minn; i++){
+
+        printf(format, v.t.ptr[i]);
+        printf("%s", sep);        
+        printf(format, v.x.ptr[i]);
+        printf("%s", sep);        
+        printf(format, v.y.ptr[i]);
+        printf("\n");
+    }
+
+    return;
 
 };

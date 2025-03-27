@@ -11,7 +11,7 @@ typedef struct txyvec {
 } txyvec;
 
 
-void    vvvprint(txyvec v);
+void  vvvprint( txyvec v, char* format, char* sep );
 txyvec  exe_runge_kutta( vec3 initial, double final, double(*f)(vec3), double(*g)(vec3), double h );
 vec3    next_rk_step( vec3 v, double(*f)(vec3), double(*g)(vec3), double h );
 

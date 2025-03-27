@@ -2,8 +2,8 @@
 
 #include <stdio.h>
 #include <malloc.h>
-#include <memory.h>
 #include <math.h>
+#include <string.h>
 
 vec vcreate(void) {
     
@@ -28,14 +28,9 @@ vec vwith_cap( unsigned cap ) {
 void vappend( vec* v, double x) {
 
     if ( v->len == v->cap ) { 
-
-        vec v1 = vwith_cap(v->cap * 2);
-        v1.len = v->len;
-
-        memcpy(v1.ptr, v->ptr, v->cap * sizeof(double) );
-        vdestroy(v);
-
-        *v = v1;
+        v->cap *= 2;
+        
+        v->ptr = realloc(v->ptr, v->cap * sizeof(double) );
     }
 
     v->ptr[v->len] = x;
@@ -52,12 +47,15 @@ void vdestroy( vec* v ) {
 };
 
 
-void printvec( vec v ) 
-{
+void printvec( vec v, char* format, char* sep ) {
+
     for ( unsigned i = 0; i < v.len; i++)
     {
-        printf("%e ", *(v.ptr + i));
+        printf(format, *(v.ptr + i));
+        printf("%s", sep);
     }
+
+    if (strchr(sep, '\n') == NULL) { printf("\n");}
 };
 
 vec linspacee(double a, double b, int n) {
@@ -66,7 +64,7 @@ vec linspacee(double a, double b, int n) {
     
     for (unsigned i = 0; i < v.cap; i++)
     {
-        j = (double)i / v.cap;
+        j = (double)i / (v.cap-1);
 
         vappend(&v, a + (b-a)*j);
     } 
@@ -78,9 +76,9 @@ vec logspacee(double a, double b, int n) {
     double j;
     vec v = vwith_cap(n+1);
     
-    for (unsigned i = 0; i < v.cap; i++)
-    {
-        j = (double)i / v.cap;
+    for (unsigned i = 0; i < v.cap; i++) {
+
+        j = (double)i / (v.cap-1);
 
         vappend(&v, a * pow(b/a,j) );
     } 
