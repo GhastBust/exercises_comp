@@ -22,9 +22,9 @@ def main():
  
     # g_raph.graph_solution_ctn_sqrt()
     
-    # g_raph.graph_iterations_methods()
+    g_raph.graph_iterations_methods()
 
-    g_raph.graph_star_radius_mass()
+    # g_raph.graph_star_radius_mass()
 
     # print("R0 = ", R0 * 1e-18, "km")
     # print("M0 = ", M0 * MeVc2_to_solar, "Mo")

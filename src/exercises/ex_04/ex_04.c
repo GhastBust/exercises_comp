@@ -1,9 +1,9 @@
-#ifndef __STAR_EX_H__
-#define __STAR_EX_H__
+#include "ex_03.h"
 
+#include <stdio.h>
 #include <math.h>
-#include "../matr/matr.h"
-#include "runge_kutta.h"
+#include "../../matr/matr.h"
+#include "../../runge_kutta/runge_kutta.h"
 
 //* Siano i tre parametri: 
 //* 0) raggio
@@ -12,12 +12,12 @@
 
 // static const double gamma_ = 5./3;
 // static const double K = 0.05;
-// static const double gamma_ = 4./3;
-// static const double K = 0.1;
-static const double gamma_ = 2.54;
-static const double K = 0.01;
+static const double gamma_ = 4./3;
+static const double K = 0.1;
+// static const double gamma_ = 2.54;
+// static const double K = 0.01;
 
-double dens( double P ) {
+static double dens( double P ) {
     return pow( P /K /(gamma_ - 1), 1/gamma_);
 }
 
@@ -39,36 +39,19 @@ double dmdr( vec3 v ) {
     return r *r *dens(P);
 }
 
-void vvvappend( txyvec* vvv, vec3 v ) {
-    vappend( &vvv->t, v.o[0] );
-    vappend( &vvv->x, v.o[1] );
-    vappend( &vvv->y, v.o[2] );
-}
-
 vec3 calculate_radius_mass( double P ) {
 
     double h = 1e-6;
 
     vec3 initial = {{1e-5, 0, P}};
 
-    // txyvec results = { vcreate(), vcreate(), vcreate() };
     vec3 i_txy = initial;
     vec3 last_txy = initial;
-    int j = 0;
 
     while (i_txy.o[2] > 0 ) {
-
-        // printf("Iteration j = %d\n", j);
-        j++;
-
         last_txy = i_txy;
-
-        // vvvappend(&results, i_txy);
-
         i_txy = next_rk_step(i_txy, dmdr, dpdr, h);
     }
-
-    // vvvprint(results);
 
     last_txy.o[2] = P;
 
@@ -91,9 +74,6 @@ void calculate_star_param() {
     double start = 3.73632e-07;
     double end  = 1.53070e+05;
 
-    // int steps_per_mag = 10;
-
-    // int steps = round( log10(end/start) ) *steps_per_mag;
     int steps = 150;
 
     vec Ps = logspacee(start, end, steps);
@@ -116,6 +96,3 @@ void calculate_star_param() {
     // vvvprint(results, "%6.2f, %6.2f, %.5e", NULL);
     vvvprint(results, "%.10e, %.10e, %.10e", NULL);
 }
-
-
-#endif //__STAR_EX_H__

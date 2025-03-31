@@ -58,6 +58,39 @@ void printvec( vec v, char* format, char* sep ) {
     if (strchr(sep, '\n') == NULL) { printf("\n");}
 };
 
+void vvvappend( txyvec* vvv, vec3 v ) {
+    vappend( &vvv->t, v.o[0] );
+    vappend( &vvv->x, v.o[1] );
+    vappend( &vvv->y, v.o[2] );
+}
+
+void  vvvprint( txyvec v, char* format, char* sep ) {
+
+    int minn = fmin(v.t.len, v.x.len);
+    minn = fmin(minn, v.y.len);
+
+    if ( sep == NULL ) {
+        for (int i = 0; i < minn; i++){ 
+            printf(format, v.t.ptr[i], v.x.ptr[i], v.y.ptr[i]);
+            printf("\n");
+        }
+        return;
+    }
+
+    for (int i = 0; i < minn; i++){
+
+        printf(format, v.t.ptr[i]);
+        printf("%s", sep);        
+        printf(format, v.x.ptr[i]);
+        printf("%s", sep);        
+        printf(format, v.y.ptr[i]);
+        printf("\n");
+    }
+
+    return;
+
+};
+
 vec linspacee(double a, double b, int n) {
     double j;
     vec v = vwith_cap(n+1);

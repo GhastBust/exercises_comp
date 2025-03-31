@@ -59,29 +59,4 @@ txyvec  exe_runge_kutta( vec3 initial, double final, double(*f)(vec3), double(*g
     return results;
 };
 
-void  vvvprint( txyvec v, char* format, char* sep ) {
 
-    int minn = fmin(v.t.len, v.x.len);
-    minn = fmin(minn, v.y.len);
-
-    if ( sep == NULL ) {
-        for (int i = 0; i < minn; i++){ 
-            printf(format, v.t.ptr[i], v.x.ptr[i], v.y.ptr[i]);
-            printf("\n");
-        }
-        return;
-    }
-
-    for (int i = 0; i < minn; i++){
-
-        printf(format, v.t.ptr[i]);
-        printf("%s", sep);        
-        printf(format, v.x.ptr[i]);
-        printf("%s", sep);        
-        printf(format, v.y.ptr[i]);
-        printf("\n");
-    }
-
-    return;
-
-};

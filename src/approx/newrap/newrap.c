@@ -2,7 +2,6 @@
 
 #include <math.h>
 
-#include "../fconst.h"
 
 double der(double (*f)(double), double x, double h) {
 
@@ -19,7 +18,7 @@ Option newrap(double (*f)(double), double x, double e, clock_t start, vec* resul
 
     const double x1 = x - (*f)(x)/ der(f, x, e*1e-3);
 
-    vappend(results, x1*lambda);
+    vappend(results, x1);
 
     if (fabs(x1-x) < e) return Some(x1);
 
