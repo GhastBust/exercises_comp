@@ -2,6 +2,8 @@ import putils
 import csv
 import numpy as np
 from matplotlib import pyplot 
+from os.path import join
+
 
 import putils.graph
 
@@ -102,7 +104,6 @@ def graph_star_radius_mass():
 
     fig = putils.graph.PFig( pyplot.figure(), "Raggio e massa solare a confronto", "Raggio [Km]", r"Massa [$M_{\odot}$]")
 
-    from os.path import join
 
     for (file, label, color) in zip(files, labels, colors):
 
@@ -119,3 +120,29 @@ def graph_star_radius_mass():
     axes.set_yscale("log")
 
     fig.polish()
+
+
+def graph_harmonic_vernel():
+
+    a = extract(join("data", "harmonic_vel-ver.csv"))
+
+    fig = putils.graph.PFig( 
+        pyplot.figure(),
+        "Oscillatore armonico", 
+        "x", "y"
+    )
+
+    t = np.arange(len(a[0]))
+
+    colors = [
+        "red",
+        "olivedrab",
+        "blue",
+    ]
+
+
+    for dat, color in zip(a, colors):
+
+        fig.data(t, dat, color= color, linestyle="-")
+
+    fig.polish(show= False)
