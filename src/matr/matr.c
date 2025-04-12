@@ -1,15 +1,91 @@
 #include "matr.h"
 
 #include <memory.h>
+#include <stdarg.h>
 
+vec3 vminus(vec3 v)
+{
+    vec3 new_v = {0};
 
-vec3 vvadd( vec3 a, vec3 b) {
-    
-    vec3 c = {{ a.o[0] + b.o[0], a.o[1] + b.o[1], a.o[2] + b.o[2] }};
+    for ( int i = 0; i < 3; i++) {
+        new_v.o[i] = -v.o[i];
+    }
 
-    return c;
+    return new_v;
+}
+
+double v3norm2(vec3 v)
+{
+    double norm = 0;
+
+    for( int i = 0; i < 3; i++ ) {
+        norm += v.o[i] * v.o[i];
+    }
+
+    return norm;
 };
 
+vec3 vvadd( const vec3* a, const vec3* b) {
+    
+    vec3 new_v = {{0}};
+
+    for (int i = 0; i < 3; i++) {
+        new_v.o[i] = a->o[i] + b->o[i];
+    }
+
+    return new_v;
+};
+
+
+vec3 mvvadd( int count,... ) {
+
+    vec3 result = {0};
+
+    va_list args;
+    va_start(args, count);
+ 
+    for (int i = 0; i < count; ++i) {
+        result = vvadd( &result, va_arg(args, vec3*) );
+    }
+ 
+    va_end(args);
+    return result;
+
+}
+
+
+vec3 vvdiff( const vec3* a, const vec3* b) {
+
+    vec3 new_v = {{0}};
+
+    for (int i = 0; i < 3; i++) {
+        new_v.o[i] = a->o[i] - b->o[i];
+    }
+
+    return new_v;
+};
+
+double vvscal( vec3 a, vec3 b) {
+
+    double prod = 0;
+
+    for (int i = 0; i < 3; i++) {
+        prod += a.o[i] * b.o[i];
+    }
+
+    return prod;
+}
+
+vec3 cv3mult(double c, const vec3* v)
+{
+    vec3 new_v = {{0}};
+
+    for (int i = 0; i < 3; i++) {
+        new_v.o[i] = c * v->o[i];
+    }
+
+    return new_v;
+};
 
 mat2x2 mfrom( double arr[4] ) {
     mat2x2 M = {{ arr[0], arr[1], arr[2], arr[3] }};

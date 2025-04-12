@@ -1,10 +1,15 @@
 #include "ex_06.h"
 
-
 #include <math.h>
+#include <malloc.h>
 
 #include "../../vel-ver/vel-ver.h"
 #include "../../output/output.h"
+
+static const double epsilon = 1;
+static const double sigma = 1;
+// static const double kB = 1;
+
 
 double harmonic_pot( double q ) {
     
@@ -18,18 +23,24 @@ double harmonic_herm( vec2 x ) {
     return 1. /2 *x.b *x.b + 1. /2 *x.a *x.a;
 }
 
+
+
+
+
+
+
 void calc_harmonic( void ) {
 
     vec2 x = {1, 0};
 
     double T = 20;
-    double h = 1e-4;
+    double dt = 1e-4;
 
     csv_open_write("data/harmonic_vel-ver.csv");
 
-    for (double t = 0; t < T; t += h) {
+    for (double t = 0; t < T; t += dt) {
 
-        x = step_vel_ver(x, harmonic_pot, 1, h);
+        x = step_vel_ver(x, harmonic_pot, 1, 1e-4, dt);
 
         csv_write(x.a);
         csv_write(x.b);
@@ -39,4 +50,25 @@ void calc_harmonic( void ) {
     }
 
     csv_close();
+}
+
+
+
+void calc_LJ_fluid_sim( void ) {
+
+    int particles = 100;
+
+    Particle* parray = calloc( particles, sizeof(Particle) );
+
+
+
+    for ( unsigned i = 0; i < particles; i++) {
+        for ( unsigned j = i+1; j < particles; j++ ) {
+
+
+            
+
+        }
+    }
+
 }

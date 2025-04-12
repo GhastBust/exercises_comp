@@ -1,6 +1,6 @@
 SHELL := /bin/bash
-DBGTAGS = -fdiagnostics-color=always -Wall -g -Wextra 
-RLSTAGS 	= -fdiagnostics-color=always -Wall -O3 -Wextra 
+DBGTAGS 	= -std=gnu2x -fdiagnostics-color=always -Wall -g -Wextra 
+RLSTAGS 	= -std=gnu2x -fdiagnostics-color=always -Wall -O3 -Wextra 
 # `gsl-config --cflags --libs`
 LTAGS 	= -fdiagnostics-color=always -Wall -Wextra
 LINKS = -lgsl -lgslcblas -lm

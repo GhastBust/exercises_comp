@@ -15,18 +15,18 @@ vec3 next_rk_step( vec3 v, double(*f)(vec3), double(*g)(vec3), double h ) {
 
     add = (vec3){{ h/2, k1/2, l1/2 }};
 
-    double k2 = h * (*f)(vvadd(v, add));
-    double l2 = h * (*g)(vvadd(v, add));
+    double k2 = h * (*f)(vvadd(&v, &add));
+    double l2 = h * (*g)(vvadd(&v, &add));
 
     add = (vec3){{ h/2, k2/2, l2/2 }};
 
-    double k3 = h * (*f)(vvadd(v, add));
-    double l3 = h * (*g)(vvadd(v, add));
+    double k3 = h * (*f)(vvadd(&v, &add));
+    double l3 = h * (*g)(vvadd(&v, &add));
 
     add = (vec3){{ h, k3, l3 }};
 
-    double k4 = h * (*f)(vvadd(v, add));
-    double l4 = h * (*g)(vvadd(v, add));
+    double k4 = h * (*f)(vvadd(&v, &add));
+    double l4 = h * (*g)(vvadd(&v, &add));
 
     double x_next = v.o[1] + 1.0 /6 *( k1 + 2*k2 + 2*k3 + k4 );
     double y_next = v.o[2] + 1.0 /6 *( l1 + 2*l2 + 2*l3 + l4 );

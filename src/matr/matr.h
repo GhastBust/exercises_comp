@@ -20,7 +20,14 @@ typedef struct vec3 {
 } vec3;
 
 
-vec3    vvadd( vec3 a, vec3 b);
+vec3    vminus( vec3 v ); 
+double  v3norm2( vec3 v );
+vec3    vvadd ( const vec3* a, const vec3* b);
+vec3    mvvadd( int count, ... );
+vec3    vvdiff( const vec3* a, const vec3* b);
+double  vvscal( vec3 a, vec3 b);
+vec3    cv3mult( double c, const vec3* v);
+
 mat2x2  mfrom( double arr[4] );
 vec2    mvmult( mat2x2 M, vec2 v );
 mat2x2  cmmult( double c, mat2x2 M);

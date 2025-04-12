@@ -1,8 +1,11 @@
-#include "exercises/ex_06/ex_06.h"
+#include <stdio.h>
 
-int main() {
+// #include "exercises/ex_06/ex_06.h"
+#include "matr/matr.h"
 
-    calc_harmonic();
+int main() {    
+
+    // calc_harmonic();
 
     return 0;
 }
