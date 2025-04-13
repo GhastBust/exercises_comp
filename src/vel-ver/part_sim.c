@@ -3,43 +3,8 @@
 #include <malloc.h>
 #include <math.h>
 #include "../rand/rand.h"
+#include "../mymath/mymath.h"
 
-typedef struct VernelSimulation {
-    int     n_particles;
-    Particle*   old_particles;
-    Particle*   new_particles;
-} VernelSimulation;
-
-
-inline double Pdistance2( const Particle* a, const Particle* b ) {
-    vec3 temp = vvdiff(&a->pos, &b->pos);
-    return v3norm2(temp);
-};
-
-inline vec3 direct( const Particle* a, const Particle* b ) {
-    vec3 temp = vvdiff(&a->pos, &b->pos);
-    return cv3mult(1/sqrt(v3norm2(temp)), &temp);
-};
-
-double int_pow( double base, int exp ) {
-
-    if (exp < 0) {
-        base = 1/base;
-        exp = -exp;
-    }
-
-    if (exp == 0) {return 1;}
-
-    if ( exp == 2 ) { return base * base;}
-
-    if (exp % 2 == 0) {
-        double half_pow = int_pow(base, exp/2);
-        return half_pow * half_pow;
-    } else {
-        double one_minus_pow = int_pow(base, exp-1);
-        return one_minus_pow * base;
-    }
-}
 
 
 inline vec3 get_force_between( const Particle* a, const Particle* b ) {
@@ -64,7 +29,7 @@ void swap_old_new( VernelSimulation* sym ) {
     sym->new_particles = temp;
 }
 
-VernelSimulation init_simulation( size_t num_particles, double mass, double radius, int seed, double sigma ) {
+VernelSimulation init_simulation( size_t num_particles, double mass, double side_len, int seed, double sigma ) {
 
     Particle* parray = calloc( num_particles * 2, sizeof(Particle) );
 
@@ -75,9 +40,9 @@ VernelSimulation init_simulation( size_t num_particles, double mass, double radi
         parray[i].id = i;
         parray[i].mass = mass;
         parray[i].pos = (vec3){{
-            linear_rand(0, 100), 
-            linear_rand(0, 100), 
-            linear_rand(0, 100)
+            linear_rand(0, side_len ), 
+            linear_rand(0, side_len ),
+            linear_rand(0, side_len )
         }};
         parray[i].vel = (vec3){{
             gaussian_rand(&R),
@@ -86,22 +51,44 @@ VernelSimulation init_simulation( size_t num_particles, double mass, double radi
         }};
     }
 
-    return (VernelSimulation){ num_particles, parray, parray+num_particles};
+    return (VernelSimulation){ num_particles, side_len, parray, parray+num_particles};
 };
+
+
+Particle mirror_particle( const Particle* a, double side_len, const Particle* b ) {
+
+    vec3 new_pos    = b->pos;
+    vec3 diff       = vvdiff(&a->pos, &b->pos);
+
+    for (int i = 0; i < 3; i++) {
+        if ( diff.o[i] > side_len/2 ) {
+            
+            if ( a->pos.o[i] < side_len/2) {
+                new_pos.o[i] -= side_len;
+            } else {
+                new_pos.o[i] += side_len;
+            }
+        }
+    }
+
+    return (Particle){b->id, b->mass, new_pos, b->vel};
+}
 
 
 vec3 LJ_force( const Particle* part, const void* vp_system ) {
         
-    const VernelSimulation* system = (VernelSimulation*) vp_system; //! molto unsafe, ma unico modo di procedere
+    const VernelSimulation* sym = (VernelSimulation*) vp_system; //! molto unsafe, ma unico modo di procedere
 
     vec3 current_force;
     vec3 force_on_particle = {0};
 
-    for (int i = 0; i < system->n_particles; i++) {
+    for (int i = 0; i < sym->n_particles; i++) {
         
-        if ( i==part->id) {continue;}
+        if ( i == part->id ) {continue;}
 
-        current_force = get_force_between(part, system->old_particles + i);
+        Particle mirrored = mirror_particle(part, sym->size_len, sym->old_particles + i);
+
+        current_force = get_force_between(part, &mirrored);
 
         force_on_particle = vvadd(&force_on_particle, &current_force);
     }

@@ -6,8 +6,8 @@
 #include "../../vel-ver/vel-ver.h"
 #include "../../output/output.h"
 
-static const double epsilon = 1;
-static const double sigma = 1;
+// static const double epsilon = 1;
+// static const double sigma = 1;
 // static const double kB = 1;
 
 
@@ -22,11 +22,6 @@ double harmonic_pot( double q ) {
 double harmonic_herm( vec2 x ) {
     return 1. /2 *x.b *x.b + 1. /2 *x.a *x.a;
 }
-
-
-
-
-
 
 
 void calc_harmonic( void ) {
@@ -53,13 +48,29 @@ void calc_harmonic( void ) {
 }
 
 
-
 void calc_LJ_fluid_sim( void ) {
 
-    int particles = 100;
+    int particles   = 100;
+    double mass     = 1;
+    double side_len = 10;
+    int seed        = 12345678;
+    double sigma    = 1;
+    double dt       = 0.01;
 
-    Particle* parray = calloc( particles, sizeof(Particle) );
+    VernelSimulation sym = init_simulation( particles, mass, side_len, seed );
+
+    for ( double t = 0; t < 20; t+= dt ) {
+
+        for ( int i = 0; i < particles; i++) {
+            Particle* p = sym.old_particles + i;
+            Particle new_p = step_vernel_vec3_cforce(p, &sym, LJ_force, dt);
+    
+            sym.new_particles[i] = new_p;
+        }
+
+        swap_old_new(&sym);
+    }
+
     
     
-
 }
