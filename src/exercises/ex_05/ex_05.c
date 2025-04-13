@@ -13,10 +13,10 @@
 
 // static const double gamma_ = 5./3;
 // static const double K = 0.05;
-static const double gamma_ = 4./3;
-static const double K = 0.1;
-// static const double gamma_ = 2.54;
-// static const double K = 0.01;
+// static const double gamma_ = 4./3;
+// static const double K = 0.1;
+static const double gamma_ = 2.54;
+static const double K = 0.01;
 
 static double dens( double P ) {
     return pow( P /K /(gamma_ - 1), 1/gamma_);
@@ -74,14 +74,14 @@ void r_calculate_star_param() {
     //* da 3 a 50km
     //* cioè da 0.3 a 5
 
-    // double start = 3e-6;
-    // double end  = 1.73205e+02;    
-    double start = 2.15443e-02;
-    double end  = 1e+8;    
-    // double start = 3.73632e-07;
-    // double end  = 1.53070e+05;
+    // double start = 4.36516e-06;
+    // double end  = 1.2e7;    
+    // double start = 3.19736e-02;
+    // double end  = 2.77223e+03;    
+    double start = 3.73632e-07;
+    double end  = 1.53070e+05;
 
-    int steps = 30;
+    int steps = 150;
 
     vec Ps = logspacee(start, end, steps);
     txyvec results = { vcreate(), vcreate(), vcreate() };
@@ -100,7 +100,7 @@ void r_calculate_star_param() {
         vvvappend( &results, i_rmp );
     }
 
-    vvvprint(results, "%6.2f, %6.2f, %.5e", NULL);
-    // vvvprint(results, "%.10e, %.10e, %.10e", NULL);
+    // vvvprint(results, "%6.2f, %6.2f, %.5e", NULL);
+    vvvprint(results, "%.10e, %.10e, %.10e", NULL);
 }
 

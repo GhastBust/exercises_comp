@@ -57,7 +57,7 @@ void calc_LJ_fluid_sim( void ) {
     double sigma    = 1;
     double dt       = 0.01;
 
-    VernelSimulation sym = init_simulation( particles, mass, side_len, seed );
+    VernelSimulation sym = init_simulation( particles, mass, side_len, seed, sigma);
 
     for ( double t = 0; t < 20; t+= dt ) {
 

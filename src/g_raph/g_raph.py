@@ -122,6 +122,47 @@ def graph_star_radius_mass():
     fig.polish()
 
 
+def graph_rel_star_radius_mass(): 
+
+    files = [
+        "rel_gamma5-3.csv",
+        "rel_gamma4-3.csv",
+        "rel_gamma2.54.csv"
+    ]
+
+    labels = [ 
+        r"$\Gamma = \frac{5}{3}$",
+        r"$\Gamma = \frac{4}{3}$",
+        r"$\Gamma = 2.54$"
+    ]
+
+    colors = [
+        "red",
+        "olivedrab",
+        "blue",
+    ]
+
+    fig = putils.graph.PFig( pyplot.figure(), "Raggio e massa solare a confronto", "Raggio [km]", r"Massa [$M_{\odot}$]")
+
+
+    for (file, label, color) in zip(files, labels, colors):
+
+        a = extract(join("data", file))
+
+        r = np.array( a[0] )
+        m = np.array( a[1] )
+
+        fig.data(r, m, label=label, color= color, linestyle="-")
+
+    axes = pyplot.gca()
+
+    axes.set_xscale("log")
+    axes.set_yscale("log")
+
+    fig.polish(legend_position="lower right")
+
+
+
 def graph_harmonic_vernel():
 
     a = extract(join("data", "harmonic_vel-ver.csv"))
