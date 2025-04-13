@@ -2,14 +2,12 @@
 
 #include <malloc.h>
 #include <math.h>
+#include "../rand/rand.h"
 
 typedef struct VernelSimulation {
     int     n_particles;
-
-    vec3*       forces;
     Particle*   old_particles;
     Particle*   new_particles;
-
 } VernelSimulation;
 
 
@@ -60,25 +58,53 @@ inline vec3 get_force_between( const Particle* a, const Particle* b ) {
     return force3;
 };
 
-
-VernelSimulation setup_simulation( size_t num_particles, double radius ) {};
-
-
-
-
-double LJ_pot( double r ) {
-
-    double sigma_r_6 =  int_pow( sigma/r, 3);
-    sigma_r_6 *= sigma_r_6;
-
-    return 4 *epsilon *sigma_r_6 *(sigma_r_6 - 1);
+void swap_old_new( VernelSimulation* sym ) {
+    Particle* temp = sym->old_particles;
+    sym->old_particles = sym->new_particles;
+    sym->new_particles = temp;
 }
 
+VernelSimulation init_simulation( size_t num_particles, double mass, double radius, int seed, double sigma ) {
 
-double potential_U( void* p_simulation, const vec3* part ) {
+    Particle* parray = calloc( num_particles * 2, sizeof(Particle) );
 
-    VernelSimulation* simulation = (VernelSimulation*) p_simulation; //! molto unsafe, ma unico modo di procedere
+    RandGenerator R = init_random_generator(seed, sigma);
+
+    for (size_t i = 0; i < num_particles; i++) {
+
+        parray[i].id = i;
+        parray[i].mass = mass;
+        parray[i].pos = (vec3){{
+            linear_rand(0, 100), 
+            linear_rand(0, 100), 
+            linear_rand(0, 100)
+        }};
+        parray[i].vel = (vec3){{
+            gaussian_rand(&R),
+            gaussian_rand(&R),
+            gaussian_rand(&R)
+        }};
+    }
+
+    return (VernelSimulation){ num_particles, parray, parray+num_particles};
+};
 
 
+vec3 LJ_force( const Particle* part, const void* vp_system ) {
+        
+    const VernelSimulation* system = (VernelSimulation*) vp_system; //! molto unsafe, ma unico modo di procedere
+
+    vec3 current_force;
+    vec3 force_on_particle = {0};
+
+    for (int i = 0; i < system->n_particles; i++) {
+        
+        if ( i==part->id) {continue;}
+
+        current_force = get_force_between(part, system->old_particles + i);
+
+        force_on_particle = vvadd(&force_on_particle, &current_force);
+    }
+
+    return force_on_particle;
 }
-

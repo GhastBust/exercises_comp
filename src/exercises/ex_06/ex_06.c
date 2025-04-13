@@ -59,16 +59,7 @@ void calc_LJ_fluid_sim( void ) {
     int particles = 100;
 
     Particle* parray = calloc( particles, sizeof(Particle) );
-
-
-
-    for ( unsigned i = 0; i < particles; i++) {
-        for ( unsigned j = i+1; j < particles; j++ ) {
-
-
-            
-
-        }
-    }
+    
+    
 
 }

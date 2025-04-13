@@ -1,7 +1,6 @@
 #include <stdio.h>
 
-// #include "exercises/ex_06/ex_06.h"
-#include "matr/matr.h"
+#include "exercises/ex_06/ex_06.h"
 
 int main() {    
 
