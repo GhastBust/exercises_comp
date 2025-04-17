@@ -2,39 +2,48 @@
 
 // static const double T = 1;
 // static const double L = 1;
-static const double m = 1;
-static const double k = 1;
+// static const double m = 1;
+// static const double k = 1;
 
 
+vec3 step_eulero_stella( const vec3* x, vec3 (*f)(const vec3*, double ), double h ) {
 
-vec2 step_euler0( vec2 qp, double h ) {
+    vec3 dx = (*f)(x, h);
 
-    mat2x2 M = {{1, h/m, h*k, 1}};
+    vec3 hdx = cv3mult(h, &dx);
+
+    return vvadd(x, &hdx);
+}
+
+
+// vec2 step_euler0( vec2 qp, double h ) {
+
+//     mat2x2 M = {{1, h/m, h*k, 1}};
     
-    return mvmult(M, qp);
-}
+//     return mvmult(M, qp);
+// }
 
-vec2 step_euler1( vec2 qp, double h ) {
+// vec2 step_euler1( vec2 qp, double h ) {
     
-    double C = 1 /(1 + h *h *k /m);
+//     double C = 1 /(1 + h *h *k /m);
 
-    mat2x2 M = {{1, h/m, -h*k, 1}};
+//     mat2x2 M = {{1, h/m, -h*k, 1}};
 
-    vec2 v1 = mvmult(M, qp);
-    v1      = cvmult(C, v1);
+//     vec2 v1 = mvmult(M, qp);
+//     v1      = cvmult(C, v1);
 
-    return v1;
-}
+//     return v1;
+// }
 
-vec2 step_trapezoids( vec2 qp, double h ) {
+// vec2 step_trapezoids( vec2 qp, double h ) {
 
-    double h2 = h*h;
-    double den = 4*m+k*h2;
+//     double h2 = h*h;
+//     double den = 4*m+k*h2;
 
-    mat2x2 M = {{4*m - k*h2, 4*h, -4*m*k*h, 4*m - k*h2}};
+//     mat2x2 M = {{4*m - k*h2, 4*h, -4*m*k*h, 4*m - k*h2}};
 
-    vec2 v1 = mvmult(M, qp);
-    v1 = cvmult(1/den, v1);
+//     vec2 v1 = mvmult(M, qp);
+//     v1 = cvmult(1/den, v1);
 
-    return v1;
-}
+//     return v1;
+// }

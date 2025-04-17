@@ -25,6 +25,10 @@ double v3norm2(vec3 v)
     return norm;
 };
 
+vec2    vadd ( vec2 a, vec2 b) {
+    return (vec2){a.a+b.a, a.b+b.b};
+}
+
 vec3 vvadd( const vec3* a, const vec3* b) {
     
     vec3 new_v = {{0}};

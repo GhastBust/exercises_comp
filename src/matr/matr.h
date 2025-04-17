@@ -28,6 +28,7 @@ vec3    vvdiff( const vec3* a, const vec3* b);
 double  vvscal( vec3 a, vec3 b);
 vec3    cv3mult( double c, const vec3* v);
 
+vec2    vadd ( vec2 a, vec2 b);
 mat2x2  mfrom( double arr[4] );
 vec2    mvmult( mat2x2 M, vec2 v );
 mat2x2  cmmult( double c, mat2x2 M);

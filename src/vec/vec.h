@@ -17,6 +17,14 @@ typedef struct txyvec {
 } txyvec;
 
 
+// typedef struct multvec {
+//     vec* o;
+//     // unsigned len;
+//     // unsigned cap;
+// } multvec;
+
+// multvec muv_with_cap( unsigned cap );
+
 vec     vcreate(void);
 vec     vwith_cap( unsigned cap );
 void    vappend( vec* v, double x );

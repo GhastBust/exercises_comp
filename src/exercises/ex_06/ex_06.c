@@ -48,18 +48,42 @@ void calc_harmonic( void ) {
 }
 
 
+double calc_temp( const VernelSimulation* sym ) {
+
+    double temperatue = 0;
+
+    for (int i = 0; i < sym->n_particles; i++) {
+        temperatue = v3norm2(sym->old_particles[i].vel) * sym->old_particles[i].mass;
+    }
+
+    temperatue /= 3 *sym->n_particles;
+
+    return temperatue;
+}
+
+
 void calc_LJ_fluid_sim( void ) {
 
-    int particles   = 100;
+    int particles   = 2;
     double mass     = 1;
-    double side_len = 10;
-    int seed        = 12345678;
-    double sigma    = 1;
-    double dt       = 0.01;
+    double side_len = 100;
+    double init_sq  = 10;
+    int seed        = 874512;
+    double sigma    = 5;
+    double dt       = 0.001;
+    double T        = 2000;
 
-    VernelSimulation sym = init_simulation( particles, mass, side_len, seed, sigma);
+    VernelSimulation sym = init_simulation( particles, mass, side_len, init_sq, seed, sigma);
 
-    for ( double t = 0; t < 20; t+= dt ) {
+    for ( double t = 0; t < T; t+= dt ) {
+
+        // if ( fmod(t, T/10) < dt) {
+        //     printf("%f\n", calc_temp(&sym));
+    
+        //     for (int i = 0; i < sym.n_particles; i++) {
+        //         particle_print(&sym.old_particles[i]);
+        //     }
+        // }
 
         for ( int i = 0; i < particles; i++) {
             Particle* p = sym.old_particles + i;
@@ -71,6 +95,5 @@ void calc_LJ_fluid_sim( void ) {
         swap_old_new(&sym);
     }
 
-    
-    
+
 }

@@ -80,7 +80,6 @@ void r_calculate_star_param() {
     // double end  = 2.77223e+03;    
     double start = 3.73632e-07;
     double end  = 1.53070e+05;
-
     int steps = 150;
 
     vec Ps = logspacee(start, end, steps);
@@ -103,4 +102,3 @@ void r_calculate_star_param() {
     // vvvprint(results, "%6.2f, %6.2f, %.5e", NULL);
     vvvprint(results, "%.10e, %.10e, %.10e", NULL);
 }
-

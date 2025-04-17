@@ -17,6 +17,7 @@ vec2 step_vel_ver( vec2 x, double (*U) (double), double m, double dx, double dt 
 Particle step_vernel_vec3_cforce( const Particle *x, const void* sym, vec3 (*f)(const Particle*, const void *), double dt );
 double Pdistance2( const Particle* a, const Particle* b );
 vec3 direct( const Particle* a, const Particle* b );
+void particle_print( Particle* p );
 
 
 typedef struct VernelSimulation {
@@ -27,7 +28,7 @@ typedef struct VernelSimulation {
 } VernelSimulation;
 
 void swap_old_new( VernelSimulation* sym );
-VernelSimulation init_simulation( size_t num_particles, double mass, double side_len, int seed, double sigma );
+VernelSimulation init_simulation( size_t num_particles, double mass, double side_len, double init_square_len, int seed, double sigma );
 vec3 LJ_force( const Particle* part, const void* vp_system );
 
 

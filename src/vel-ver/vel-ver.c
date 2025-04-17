@@ -1,6 +1,7 @@
 #include "vel-ver.h"
 
 #include <math.h>
+#include <stdio.h>
 
 #include "../approx/approx.h"
 
@@ -92,3 +93,13 @@ Particle step_vernel_vec3_cforce(
 
     return new_part;
 };
+
+
+void particle_print( Particle* p ) {
+
+    printf("Particle:\n");
+    printf("\tid: %2d\n", p->id);
+    printf("\tpos: (%f, %f, %f)\n", p->pos.o[0], p->pos.o[1], p->pos.o[2]);
+    printf("\tvel: (%f, %f, %f)\n", p->vel.o[0], p->vel.o[1], p->vel.o[2]);
+
+}

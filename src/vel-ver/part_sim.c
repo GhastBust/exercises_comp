@@ -27,9 +27,16 @@ void swap_old_new( VernelSimulation* sym ) {
     Particle* temp = sym->old_particles;
     sym->old_particles = sym->new_particles;
     sym->new_particles = temp;
+
+    for ( int i = 0; i < sym->n_particles; i++) {
+        for (int j = 0; j < 3; j++) {
+            sym->old_particles[i].pos.o[j] = fmod(sym->old_particles[i].pos.o[j], sym->size_len);
+        }
+    }
+
 }
 
-VernelSimulation init_simulation( size_t num_particles, double mass, double side_len, int seed, double sigma ) {
+VernelSimulation init_simulation( size_t num_particles, double mass, double side_len, double init_square_side, int seed, double sigma ) {
 
     Particle* parray = calloc( num_particles * 2, sizeof(Particle) );
 
@@ -40,9 +47,9 @@ VernelSimulation init_simulation( size_t num_particles, double mass, double side
         parray[i].id = i;
         parray[i].mass = mass;
         parray[i].pos = (vec3){{
-            linear_rand(0, side_len ), 
-            linear_rand(0, side_len ),
-            linear_rand(0, side_len )
+            linear_rand(0, init_square_side ), 
+            linear_rand(0, init_square_side ),
+            linear_rand(0, init_square_side )
         }};
         parray[i].vel = (vec3){{
             gaussian_rand(&R),

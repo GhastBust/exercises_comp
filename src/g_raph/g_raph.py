@@ -187,3 +187,16 @@ def graph_harmonic_vernel():
         fig.data(t, dat, color= color, linestyle="-")
 
     fig.polish(show= False)
+
+
+
+def graph_err_star_radius_mass():
+
+    a = extract( join( "data", "rm_error_star.csv"))
+
+    fig = putils.graph.PFig( 
+        pyplot.figure(),
+        "Errore sulla massa", 
+        "h[Km]", "Errore %"
+    )
+
