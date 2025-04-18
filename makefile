@@ -24,7 +24,7 @@ final: release
 
 ulibs:
 
-	.venv/bin/pip install git+https://username:$(token2)@github.com/GhastBust/putils.git
+	@.venv/bin/pip install git+https://username:$(token2)@github.com/GhastBust/putils.git
 
 dbg: 
 	@for i in $$(find ./src  -type f -name '*.c' ); do \

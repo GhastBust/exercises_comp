@@ -42,9 +42,9 @@ double dmdr( vec3 v ) {
     return r *r *dens(P);
 }
 
-vec3 calculate_radius_mass( double P, double h) {
+vec3 calculate_radius_mass( double P, double h ) {
 
-    vec3 initial = {{1e-5, 0, P}};
+    vec3 initial = {{h, 0, P}};
 
     vec3 i_txy = initial;
     vec3 last_txy = initial;
@@ -98,15 +98,13 @@ void calculate_star_param() {
     vvvprint(results, "%.10e, %.10e, %.10e", NULL);
 }
 
-vec3 df_stella( const vec3* x, double h ) {
-    vec3 df = (vec3){{h, dmdr(*x), dpdr(*x)}};
-
-    return vvadd(x, &df);
+vec3 df_stella( const vec3* x ) {
+    return (vec3){{ 1, dmdr(*x), dpdr(*x) }};
 }
 
 vec3 calculate_radius_mass_euler( double P0, double h ) {
 
-    vec3 initial = {{1e-5, 0, P0}};
+    vec3 initial = {{ h, 0, P0 }};
 
     vec3 i_txy = initial;
     vec3 last_txy = initial;
@@ -157,7 +155,7 @@ void calculate_with_euler( void ) {
     const double start = 1;
     const double end  = 1e-8;
 
-    const int steps = 30;
+    const int steps = 150;
     vec results[] = { vwith_cap(steps+1), vwith_cap(steps+1), vwith_cap(steps+1), vwith_cap(steps+1), vwith_cap(steps+1) };
     double to_append[5] = {0};
 

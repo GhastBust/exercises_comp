@@ -17,7 +17,7 @@
 
 // vec2 step_trapezoids( vec2 qp, double h );
 
-vec3 step_eulero_stella( const vec3* x, vec3 (*f)(const vec3*, double ), double h);
+vec3 step_eulero_stella( const vec3* x, vec3 (*f)(const vec3*), double h);
 
 
 // tqp euler( double q0, double p0 ) {

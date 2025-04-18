@@ -6,9 +6,9 @@
 // static const double k = 1;
 
 
-vec3 step_eulero_stella( const vec3* x, vec3 (*f)(const vec3*, double ), double h ) {
+vec3 step_eulero_stella( const vec3* x, vec3 (*f)(const vec3*), double h ) {
 
-    vec3 dx = (*f)(x, h);
+    vec3 dx = (*f)(x);
 
     vec3 hdx = cv3mult(h, &dx);
 

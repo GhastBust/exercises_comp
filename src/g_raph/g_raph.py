@@ -142,7 +142,7 @@ def graph_rel_star_radius_mass():
         "blue",
     ]
 
-    fig = putils.graph.PFig( pyplot.figure(), "Raggio e massa solare a confronto", "Raggio [km]", r"Massa [$M_{\odot}$]")
+    fig = putils.graph.PFig( pyplot.figure(), "Pressione e massa solare a confronto", "Raggio [km]", r"Massa [$M_{\odot}$]")
 
 
     for (file, label, color) in zip(files, labels, colors):
@@ -160,6 +160,49 @@ def graph_rel_star_radius_mass():
     axes.set_yscale("log")
 
     fig.polish(legend_position="lower right")
+
+
+def graph_rel_star_pressure_mass():
+
+    p0 = 938.565 * 0.16
+
+    files = [
+        "rel_gamma5-3.csv",
+        "rel_gamma4-3.csv",
+        "rel_gamma2.54.csv"
+    ]
+
+    labels = [ 
+        r"$\Gamma = \frac{5}{3}$",
+        r"$\Gamma = \frac{4}{3}$",
+        r"$\Gamma = 2.54$"
+    ]
+
+    colors = [
+        "red",
+        "olivedrab",
+        "blue",
+    ]
+
+    fig = putils.graph.PFig( pyplot.figure(), "Pressione e massa solare a confronto", r"Pressione [$MeV fm^{-3}$]", r"Massa [$M_{\odot}$]")
+
+
+    for (file, label, color) in zip(files, labels, colors):
+
+        a = extract(join("data", file))
+
+        P = np.array( a[2] ) * p0
+        m = np.array( a[1] )
+
+        fig.data(P, m, label=label, color= color, linestyle="-")
+
+    axes = pyplot.gca()
+
+    axes.set_xscale("log")
+    axes.set_yscale("log")
+
+    fig.polish(legend_position="lower right")
+
 
 
 
@@ -190,13 +233,56 @@ def graph_harmonic_vernel():
 
 
 
-def graph_err_star_radius_mass():
+def graph_err_star_radius():
 
-    a = extract( join( "data", "rm_error_star.csv"))
+    a = extract( join( "data", "rm_error_star.csv"))[:-1]
+
+    fig = putils.graph.PFig( 
+        pyplot.figure(),
+        "Errore sull raggio", 
+        "h [Km]", "Errore %"
+    )
+
+    a = np.abs(np.array(a))[:, :-1]
+
+    t = a[4]
+
+    axes = pyplot.gca()
+
+    axes.set_xscale("log")
+    axes.set_yscale("log")
+    axes.invert_xaxis()
+
+    fig.data(t, a[0], label= "Eulero", linestyle="-")
+    fig.data(t, a[2], label= "Runge-Kutta", linestyle="-")
+
+
+    fig.polish(show= False)
+
+    
+
+def graph_err_star_mass():
+
+    a = extract( join( "data", "rm_error_star.csv"))[:-1]
 
     fig = putils.graph.PFig( 
         pyplot.figure(),
         "Errore sulla massa", 
-        "h[Km]", "Errore %"
+        "h [Km]", "Errore %"
     )
 
+    a = np.abs(np.array(a))[:, :-1]
+
+    t = a[4]
+
+    axes = pyplot.gca()
+
+    axes.set_xscale("log")
+    axes.set_yscale("log")
+    axes.invert_xaxis()
+
+    fig.data(t, a[1], label= "Eulero", linestyle="-")
+    fig.data(t, a[3], label= "Runge-Kutta", linestyle="-")
+
+
+    fig.polish(show= False)

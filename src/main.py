@@ -3,25 +3,16 @@ import numpy as np
 
 from putils import units
 
-# c = 1
-# Mn = 938.565
-# p0 = Mn * 0.16
-# P0 = p0 * c**2
-# hc = 197.327
-# G = hc * 6.67259e-45
-
-# R0 = np.sqrt( P0 /4 /np.pi /G /p0**2 )
-# M0 = R0 *P0 /G /p0
-
-# MeVc2_to_solar = 1.79e-30 * 5.02785e-31
-
 
 def main():
     
+    g_raph.graph_rel_star_pressure_mass()
     # g_raph.graph_harmonic_vernel()
-    g_raph.graph_rel_star_radius_mass()
-    
-    ...
+    # g_raph.graph_rel_star_radius_mass()
+    # g_raph.graph_err_star_radius()
+    # g_raph.graph_err_star_mass()
+
+    return
 
 
 if __name__ == "__main__":
