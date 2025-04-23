@@ -29,10 +29,13 @@ typedef struct VernelSimulation {
 } VernelSimulation;
 
 
-void swap_old_new( VernelSimulation* sym );
+void        swap_old_new( VernelSimulation* sym );
 VernelSimulation init_simulation( size_t num_particles, double mass, double side_len, double init_square_len, int seed, double sigma );
-vec3 LJ_force( const Particle* part, const void* vp_system );
+vec3        LJ_force( const Particle* part, const void* vp_system );
 void        step_all_vernel ( VernelSimulation* sym, vec3 (*force)(const Particle*, const void *), double dt );
+void        print_sym( VernelSimulation* sym, double time, double (*Uf)(Particle*, Particle*) );
+double      get_kin_nrg( Particle* p );
+double      calc_nrg( VernelSimulation* sym, double (*Uf)(Particle*, Particle*) );
 
 
 #endif//__VEL_VER_H__

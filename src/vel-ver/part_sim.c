@@ -114,3 +114,34 @@ void step_all_vernel(VernelSimulation *sym, vec3 (*force)(const Particle *, cons
 
     swap_old_new(sym);
 }
+
+void print_sym( VernelSimulation* sym, double time, double (*Uf)(Particle*, Particle*) ) {
+    printf("%5.2f, ", time);
+    for (int i = 0; i < sym->n_particles; i++) {
+        particle_print(sym->old_particles+i, "{pos}, {vel}, ");
+    }
+    printf("% .3e\n", calc_nrg(sym, Uf));
+}
+
+
+double get_kin_nrg( Particle* p ) {
+    return p->mass * v3norm2(p->vel) / 2;
+}
+
+
+double calc_nrg( VernelSimulation* sym, double (*Uf)(Particle*, Particle*) ) {
+
+    double K = 0;
+    double U = 0;
+
+    for (int i = 0; i < sym->n_particles; i++) {
+
+        K += get_kin_nrg( sym->old_particles + i );
+
+        for (int j = i+1; j < sym->n_particles; j++ ) {
+            U += (*Uf)( sym->old_particles + i, sym->old_particles + j);
+        }
+    }
+
+    return K + U;
+}
