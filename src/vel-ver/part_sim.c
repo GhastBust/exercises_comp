@@ -30,7 +30,7 @@ void swap_old_new( VernelSimulation* sym ) {
 
     for ( int i = 0; i < sym->n_particles; i++) {
         for (int j = 0; j < 3; j++) {
-            sym->old_particles[i].pos.o[j] = fmod(sym->old_particles[i].pos.o[j], sym->size_len);
+            sym->old_particles[i].pos.o[j] = fmod(sym->old_particles[i].pos.o[j] + sym->size_len, sym->size_len * 2 ) - sym->size_len;
         }
     }
 
@@ -101,4 +101,16 @@ vec3 LJ_force( const Particle* part, const void* vp_system ) {
     }
 
     return force_on_particle;
+}
+
+
+void step_all_vernel(VernelSimulation *sym, vec3 (*force)(const Particle *, const void *), double dt) {
+
+    for ( int i = 0; i < sym->n_particles; i++ ) {
+        Particle new_p = step_vernel_vec3_cforce(sym->old_particles + i, sym, force, dt);
+
+        sym->new_particles[i] = new_p;
+    }
+
+    swap_old_new(sym);
 }
