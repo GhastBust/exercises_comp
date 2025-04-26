@@ -138,63 +138,63 @@ bool gv_is_null( const Gvec* gv ) {
     return false;
 }
 
-Gvec gv_new ( size_t elem_size ) {
-    if (elem_size == 0){ cricical("Can't initialize a general purpose vec with 0 sized elements");}
+Gvec gv_new ( size_t s ) {
+    if (s == 0){ critical("Can't initialize a general purpose vec with 0 sized elements");}
 
-    void* ptr = malloc( DEFAULT_GV_CAPACITY  * elem_size );
+    void* ptr = malloc( DEFAULT_GV_CAPACITY  * s );
 
-    return (Gvec){ .ptr = ptr, .elem_size = elem_size, .len = 0, .cap = DEFAULT_GV_CAPACITY};
+    return (Gvec){ .ptr = ptr, .elem_size = s, .len = 0, .cap = DEFAULT_GV_CAPACITY};
 }
 
-Gvec gv_with_cap( size_t elem_size, size_t cap ) {
+Gvec gv_with_cap( size_t s, size_t cap ) {
 
-    if (elem_size == 0) { cricical("Can't initialize a general purpose vec with 0 sized elements");}
-    if (cap == 0)       { cricical("Can't initialize a 0 cap general purpose vec"); }
+    if (s == 0)   { critical("Can't initialize a general purpose vec with 0 sized elements");}
+    if (cap == 0) { critical("Can't initialize a 0 cap general purpose vec"); }
 
-    double* ptr = malloc( cap * elem_size );
+    double* ptr = malloc( cap * s );
 
-    return (Gvec){ .ptr = ptr, .cap = cap, .len = 0, .elem_size = elem_size};
+    return (Gvec){ .ptr = ptr, .cap = cap, .len = 0, .elem_size = s};
 }
 
-void gv_push (Gvec* gv_to_push, const void* elem_to_push ) {
+void gv_push (Gvec* gv, const void* elem ) {
 
-    if ( gv_to_push  == NULL    ) { cricical("Gv pointer was nullptr"); }
-    if ( gv_is_null(gv_to_push) ) { cricical("Gv provided was uninitialized or freed"); }
-    if ( elem_to_push == NULL   ) { cricical("Elem to push was nullptr"); }
+    if ( gv  == NULL    ) { critical("Gv pointer was nullptr"); }
+    if ( gv_is_null(gv) ) { critical("Gv provided was uninitialized or freed"); }
+    if ( elem == NULL   ) { critical("Elem to push was nullptr"); }
 
-    if ( gv_to_push->len == gv_to_push->cap ) { 
-        gv_to_push->cap *= 2;
+    if ( gv->len == gv->cap ) { 
+        gv->cap *= 2;
         
-        gv_to_push->ptr = realloc(gv_to_push->ptr, gv_to_push->cap * gv_to_push->elem_size );
+        gv->ptr = realloc(gv->ptr, gv->cap * gv->elem_size );
     }
 
-    u8* temp_ptr    = gv_to_push->ptr;
-    temp_ptr       += gv_to_push->len * gv_to_push->elem_size;
+    u8* temp_ptr    = gv->ptr;
+    temp_ptr       += gv->len * gv->elem_size;
 
-    memcpy(temp_ptr, elem_to_push, gv_to_push->elem_size);
+    memcpy(temp_ptr, elem, gv->elem_size);
 
-    gv_to_push->len++;
+    gv->len++;
 
     return;
 }
 
-void* gv_get_ref( Gvec* gv_to_index, size_t index ) {
+void* gv_get_ref( Gvec* gv, size_t i ) {
 
-    if ( gv_to_index  == NULL     ) { cricical("Gv pointer was nullptr"); }
-    if ( gv_is_null(gv_to_index)  ) { cricical("Gv provided was uninitialized or freed"); }
-    if ( index >= gv_to_index->len) { cricical("Tried to access element OOB"); }
+    if ( gv  == NULL     ) { critical("Gv pointer was nullptr"); }
+    if ( gv_is_null(gv)  ) { critical("Gv provided was uninitialized or freed"); }
+    if ( i >= gv->len)     { critical("Tried to access element OOB"); }
 
-    return gv_to_index->ptr + index;
+    return (u8*)(gv->ptr) + i;
 }
 
-void    gv_destroy  ( Gvec* gv_to_destroy ){
+void    gv_destroy  ( Gvec* gv ){
 
-    if ( gv_to_destroy  == NULL    ) { cricical("Gv pointer was nullptr"); }
-    if ( gv_is_null(gv_to_destroy) ) { cricical("Gv provided was uninitialized or already freed"); }
+    if ( gv  == NULL    ) { critical("Gv pointer was nullptr"); }
+    if ( gv_is_null(gv) ) { critical("Gv provided was uninitialized or already freed"); }
 
-    free(gv_to_destroy->ptr);
+    free(gv->ptr);
 
-    *gv_to_destroy = (Gvec){0};
+    *gv = (Gvec){0};
 }
 
 
@@ -213,66 +213,94 @@ bool mv_is_null( const Multvec* mv ) {
     return false;
 }
 
-Multvec mv_new ( size_t elem_size, size_t n_arrays ) {
+Multvec mv_new ( size_t s, size_t n ) {
 
-    if (elem_size == 0){ cricical("Can't initialize a multivec with 0 sized elements");}
-    if (n_arrays == 0) { cricical("Can't initialize a 0 arrays multvec"); }
+    if (s == 0) { critical("Can't initialize a multivec with 0 sized elements");}
+    if (n == 0) { critical("Can't initialize a 0 arrays multvec"); }
 
-    void* ptr = malloc( DEFAULT_MV_CAPACITY * elem_size * n_arrays );
+    void* ptr = malloc( DEFAULT_MV_CAPACITY * s * n );
 
     return (Multvec){ 
         .ptr = ptr, 
-        .elem_size = elem_size, 
+        .elem_size = s, 
         .arrays_len = 0, 
-        .n_arrays = n_arrays, 
+        .n_arrays = n, 
         .cap = DEFAULT_GV_CAPACITY
     };
 }
 
-Multvec     mv_with_cap( size_t elem_size, size_t n_arrays, size_t cap ) {
-    if (elem_size == 0){ cricical("Can't initialize a multivec with 0 sized elements");}
-    if (n_arrays == 0) { cricical("Can't initialize a 0 arrays multvec"); }
-    if (cap == 0)      { cricical("Can't initialize a 0 cap multvec"); }
+Multvec     mv_with_cap( size_t s, size_t n, size_t cap ) {
+    if (s == 0){ critical("Can't initialize a multivec with 0 sized elements");}
+    if (n == 0) { critical("Can't initialize a 0 arrays multvec"); }
+    if (cap == 0)      { critical("Can't initialize a 0 cap multvec"); }
 
-    double* ptr = malloc( cap * elem_size * n_arrays );
+    double* ptr = malloc( cap * s * n );
 
     return (Multvec){ 
         .ptr = ptr, 
-        .elem_size = elem_size, 
+        .elem_size = s, 
         .arrays_len = 0, 
-        .n_arrays = n_arrays, 
+        .n_arrays = n, 
         .cap = cap
     };
 };
 
-// void        mv_push_one( const Multvec* mv_to_push, const void* elem_to_push, size_t array_to_push );
+void mv_push_all( Multvec* mv, Gvec* gv ) {
+    if ( mv  == NULL    ) { critical("Mv pointer was nullptr"); }
+    if ( mv_is_null(mv) ) { critical("Mv provided was uninitialized or freed"); }
+    if ( gv == NULL  )    { critical("Elem to push was nullptr"); }
+    if ( gv_is_null(gv))  { critical("Elem to push was uninitialized or freed"); }
+    if ( gv->len < mv->n_arrays ) { critical("Too few elements in array to push to mvarray");}
 
-void mv_push_all( Multvec* mv_to_push, const Gvec* array_to_push ) {
-    if ( mv_to_push  == NULL    ) { cricical("Mv pointer was nullptr"); }
-    if ( mv_is_null(mv_to_push) ) { cricical("Mv provided was uninitialized or freed"); }
-    if ( array_to_push == NULL  ) { cricical("Elem to push was nullptr"); }
-    if ( gv_is_null(array_to_push)) { cricical("Elem to push was uninitialized or freed"); }
-    if ( array_to_push->len < mv_to_push->n_arrays ) { cricical("Too few elements in array to push to mvarray")}
-
-
-    if ( mv_to_push->len == mv_to_push->cap ) { 
-        mv_to_push->cap *= 2;
+    if ( mv->arrays_len == mv->cap ) { 
+        mv->cap *= 2;
         
-        mv_to_push->ptr = realloc(mv_to_push->ptr, mv_to_push->cap * mv_to_push->elem_size );
+        mv->ptr = realloc(mv->ptr, mv->cap * mv->elem_size * mv->n_arrays );
     }
 
-    u8* temp_ptr    = mv_to_push->ptr;
-    temp_ptr       += mv_to_push->len * mv_to_push->elem_size;
+    u8* mv_ptr   = mv->ptr;
+    mv_ptr      += mv->arrays_len * mv->elem_size;
 
-    memcpy(temp_ptr, elem_to_push, mv_to_push->elem_size);
+    for ( size_t i = 0; i < mv->arrays_len; i++ ) {
+        memcpy( mv_ptr,  gv_get_ref(gv, i), mv->elem_size);
+        mv_ptr += mv->cap * mv->elem_size;
+    }
 
-    mv_to_push->len++;
+    mv->arrays_len++;
 
     return;
+}
+
+void *mv_get_ref( Multvec *mv, size_t i, size_t j)
+{
+    if ( mv  == NULL    ) { critical("Mv pointer was nullptr"); }
+    if ( mv_is_null(mv) ) { critical("Mv provided was uninitialized or freed"); }
+    if ( i >= mv->n_arrays ) { critical("Tried to access array OOB");}
+    if ( j >= mv->arrays_len){ critical("Tried to access object OOB");}
+
+    return (u8*)(mv->ptr) + (i * mv->cap * mv->elem_size) + (mv->elem_size * j); 
+}
+
+Gvec mv_get_vec(Multvec *mv, size_t i)
+{
+    if ( mv  == NULL    ) { critical("Mv pointer was nullptr"); }
+    if ( mv_is_null(mv) ) { critical("Mv provided was uninitialized or freed"); }
+    if ( i >= mv->n_arrays ) { critical("Tried to access array OOB");}
+
+    return (Gvec){
+        .cap = mv->cap, 
+        .elem_size = mv->elem_size, 
+        .len = mv->arrays_len, 
+        .ptr = (u8*)(mv->ptr) + i*mv->cap
+    };
+}
+
+Gvec mv_get_slc(Multvec *mv, size_t i)
+{
+    if ( mv  == NULL    ) { critical("Mv pointer was nullptr"); }
+    if ( mv_is_null(mv) ) { critical("Mv provided was uninitialized or freed"); }
+    if ( i >= mv->arrays_len ) { critical("Tried to access element OOB");}
+
+    //! copia e alloca gli elementi
+    return (Gvec){0};
 };
-
-void*       mv_get_ref ( Multvec* mv_to_index, size_t array_to_index, size_t index_in_array);
-Gvec        mv_get_vec ( Multvec* mv_to_index, size_t array_to_index );
-Gvec        mv_get_slc ( Multvec* mv_to_index, size_t index_in_array ); // void**
-
-void        mv_destroy ( Multvec* to_destroy );
