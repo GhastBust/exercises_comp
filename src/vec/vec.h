@@ -64,7 +64,7 @@ Multvec     mv_new     ( size_t elem_size, size_t n_arrays );
 Multvec     mv_with_cap( size_t elem_size, size_t n_arrays, size_t cap );
 
 // void        mv_push_one( const Multvec* mv_to_push, const void* elem_to_push, size_t array_to_push );
-void        mv_push_all( Multvec* mv_to_push, const Gvec* array_to_push );
+void        mv_push_all( Multvec* mv_to_push, Gvec* array_to_push );
 void*       mv_get_ref ( Multvec* mv_to_index, size_t array_to_index, size_t index_in_array);
 Gvec        mv_get_vec ( Multvec* mv_to_index, size_t array_to_index );
 Gvec        mv_get_slc ( Multvec* mv_to_index, size_t index_in_array ); // void**
