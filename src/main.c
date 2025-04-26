@@ -7,7 +7,8 @@
 
 int main() {
 
-    test_zero_force();
+    // test_zero_force();
+    test_central_grav();
 
 
     return 0;
