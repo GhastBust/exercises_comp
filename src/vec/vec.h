@@ -51,6 +51,10 @@ void*   gv_get_ref  ( Gvec* gv_to_index, size_t index );
 
 void    gv_destroy  ( Gvec* gv_to_destroy );
 
+int     gv_printf   ( Gvec* gv_to_print, char* format );
+int     gv_fprintf  ( Gvec* gv_to_print, void* file_stream, char* format );
+int     gv_sprintf  ( Gvec* gv_to_print, char* buffer,      char* format );
+
 
 typedef struct Multvec {
     void* ptr;

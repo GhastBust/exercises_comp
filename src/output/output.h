@@ -14,7 +14,14 @@ void csv_write(double n);
 void csv_new_line(void);
 void csv_close();
 
+/// @brief this fn counts the occurrences of sub in src
+/// @param src string from which to search
+/// @param sub substring to find
+/// @return number of occurrences
+size_t str_count_sub( char* src, char* sub );
 
+int g_printf( char* fmt, void* content, size_t size );
+int m_printf( char* fmt, void* content, size_t len, size_t size );
 
 
 // {

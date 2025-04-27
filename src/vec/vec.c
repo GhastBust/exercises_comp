@@ -7,6 +7,7 @@
 #include <stdbool.h>
 // #include <stddef.h>
 
+#include "../output/output.h"
 #include "../diag/diag.h"
 
 vec vcreate(void) {
@@ -207,6 +208,110 @@ void    gv_destroy  ( Gvec* gv ){
     *gv = (Gvec){0};
 }
 
+int gv_printf_case_1( Gvec* gv, char* format ) {
+    int i;
+    u8* gv_ptr = gv->ptr;
+
+    for ( i = 0; i < gv->len; i++ ) {
+        i += g_printf(format, gv_ptr + i, gv->elem_size);
+    }
+
+    i += printf("\n");
+    return i;
+}
+
+Gvec print_array_fmt( char *fmt, size_t len ) {
+
+    /*
+     * for the function: 
+     * 
+     * original fmt = ...
+     * apple orange %% data paper: %d
+     * ^              ^            ^
+     * back           fmt          fwrd
+     * 
+     * the search for the '%' char is done only form
+     * fmt to fwrd, but the whole string (from back to fwrd)
+     * is copied in the buffer, after the '%' has been found
+     * the string gets copied, appending it with a '\0' char
+     */
+
+    Gvec  bbuffer = gv_with_cap(sizeof(char*), len+1);
+    char*  buffer = calloc( strlen(fmt) + len + 2, sizeof(char));
+
+    char* current_buffer = buffer;
+    char* fmt_fwrd = fmt;
+    char* fmt_back = fmt;
+
+    while( (fmt_fwrd = strchr(fmt, '%')) != NULL ) {
+
+        //* if '%' char has been escaped
+        if (fmt_fwrd[1] == '%') { 
+            fmt_fwrd += 2; 
+            fmt = fmt_fwrd;
+            continue; 
+        }
+
+        //* found '%'
+        size_t word_len = fmt_fwrd - fmt_back;
+
+        memcpy(current_buffer, fmt_back, word_len);
+        gv_push(&bbuffer, &current_buffer);
+
+        //* must add the '\0' char
+        current_buffer += word_len + 1; 
+
+        //* go foward with the pointers
+        fmt_fwrd++;
+        fmt = fmt_back = fmt_fwrd;
+    }
+
+    //* push last part of string
+    gv_push(&bbuffer, &fmt_back);
+
+    return bbuffer;
+}
+
+int gv_printf_case_n( Gvec* gv, char *fmt ) {
+
+    int written_chars = 0;
+    Gvec strings = print_array_fmt(fmt, gv->len);
+
+    if ( gv->len + 1 != strings.len ) {critical("Len of vectors was wierdly set");}
+
+    written_chars += printf( "%s", *(char**)gv_get_ref(&strings, 0) );
+
+    for ( int i = 0; i < gv->len; i++ ) {
+        written_chars += g_printf( 
+            *(char**)gv_get_ref(&strings, i+1),
+            gv_get_ref(gv, i),
+            gv->elem_size
+        );
+    }
+    
+    free( *(u8**)gv_get_ref(&strings, 0) );
+    gv_destroy(&strings);
+    return written_chars;
+}
+
+int gv_printf(Gvec *gv, char *format)
+{
+    int char_written = 0;
+
+    size_t n_esc = str_count_sub(format, "%");
+    size_t n_2esc= str_count_sub(format, "%%");
+
+    n_esc -= n_2esc * 2;
+    
+    if (n_esc == 0) { critical("Symbol %% not found in format string"); }
+    if (n_esc == 1) { return gv_printf_case_1(gv, format); }
+
+    if (n_esc == gv->len) { return gv_printf_case_n(gv, format); }
+
+    critical("Number of %% symbols not conforming, enter either 1 or %ld (vec len), %ld was given", gv->len, n_esc);
+    return 0;
+}
+
 
 // typedef struct Multvec {
 //     void* ptr;
@@ -332,3 +437,4 @@ void mv_destroy(Multvec *mv) {
 
     *mv = (Multvec){0};
 };
+

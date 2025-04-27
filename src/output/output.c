@@ -1,9 +1,15 @@
+#include "output.h"
+
+#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <memory.h>
 
-#include "output.h"
+#include "../vec/vec.h"
+#include "../diag/diag.h"
+
 
 FILE* file = 0;
 static int chapter = 0;
@@ -191,3 +197,50 @@ void csv_close() {
     fclose(csv_file);
     csv_file = 0;
 };
+
+
+size_t str_count_sub( char* src, char* sub ) {
+    if (src == NULL) {critical("");}
+    if ( !sub[0] )   {critical("");}
+
+    const size_t sublen = strlen(sub);
+
+    size_t n = 0;
+    
+    while ( strlen(src) >= sublen ) {
+
+        // size_t i;
+        // for ( i = 0; i < sublen; i++ ){
+        //     if ( src[i] != sub[i] ) {break;} 
+        // }
+
+        //* substring not found
+        if (!memcmp(src, sub, sublen)) {src++; continue;}
+
+        //* substring found
+        src += sublen;
+        n++;
+    }
+
+    return n;
+}
+
+
+#define u8   __uint8_t
+#define u16  __uint16_t
+#define u32  __uint32_t
+#define u64  __uint64_t
+#define u128 __uint128_t
+
+int g_printf(char *fmt, void *content, size_t size) {
+    switch (size) {
+    case 1:  return printf(fmt, *(u8*)content); 
+    case 2:  return printf(fmt, *(u16*)content);
+    case 4:  return printf(fmt, *(u32*)content);
+    case 8:  return printf(fmt, *(u64*)content);
+    case 16: return printf(fmt, *(u128*)content);
+    default: critical("Can't handle size given, was %ld", size);
+    }
+
+    return 0;
+}
