@@ -143,7 +143,12 @@ Gvec gv_new ( size_t s ) {
 
     void* ptr = malloc( DEFAULT_GV_CAPACITY  * s );
 
-    return (Gvec){ .ptr = ptr, .elem_size = s, .len = 0, .cap = DEFAULT_GV_CAPACITY};
+    return (Gvec){ 
+        .ptr = ptr, 
+        .elem_size = s, 
+        .len = 0, 
+        .cap = DEFAULT_GV_CAPACITY
+    };
 }
 
 Gvec gv_with_cap( size_t s, size_t cap ) {
@@ -153,7 +158,12 @@ Gvec gv_with_cap( size_t s, size_t cap ) {
 
     double* ptr = malloc( cap * s );
 
-    return (Gvec){ .ptr = ptr, .cap = cap, .len = 0, .elem_size = s};
+    return (Gvec){ 
+        .ptr = ptr, 
+        .cap = cap, 
+        .len = 0, 
+        .elem_size = s
+    };
 }
 
 void gv_push (Gvec* gv, const void* elem ) {
@@ -184,7 +194,7 @@ void* gv_get_ref( Gvec* gv, size_t i ) {
     if ( gv_is_null(gv)  ) { critical("Gv provided was uninitialized or freed"); }
     if ( i >= gv->len)     { critical("Tried to access element OOB"); }
 
-    return (u8*)(gv->ptr) + i;
+    return (u8*)(gv->ptr) + i * gv->elem_size;
 }
 
 void    gv_destroy  ( Gvec* gv ){
@@ -301,6 +311,24 @@ Gvec mv_get_slc(Multvec *mv, size_t i)
     if ( mv_is_null(mv) ) { critical("Mv provided was uninitialized or freed"); }
     if ( i >= mv->arrays_len ) { critical("Tried to access element OOB");}
 
-    //! copia e alloca gli elementi
-    return (Gvec){0};
+    u8* mv_ptr   = mv->ptr;
+    mv_ptr      += i * mv->elem_size;
+
+    Gvec ret = gv_with_cap(mv->elem_size, mv->n_arrays);
+
+    for ( size_t j = 0; j < mv->n_arrays; j++ ) {
+        gv_push(&ret, mv_ptr);
+        mv_ptr += mv->cap * mv->elem_size;
+    }
+
+    return ret;
+}
+
+void mv_destroy(Multvec *mv) {
+    if ( mv  == NULL    ) { critical("Mv pointer was nullptr"); }
+    if ( mv_is_null(mv) ) { critical("Mv provided was uninitialized or already freed"); }
+
+    free(mv->ptr);
+
+    *mv = (Multvec){0};
 };
