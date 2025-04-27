@@ -8,18 +8,18 @@
 #include "../approx/approx.h"
 
 
-inline double Pdistance2( const Particle* a, const Particle* b ) {
+double Pdistance2( const Particle* a, const Particle* b ) {
     vec3 temp = vvdiff(&a->pos, &b->pos);
     return v3norm2(temp);
 };
 
-inline vec3 direct( const Particle* a, const Particle* b ) {
+vec3 direct( const Particle* a, const Particle* b ) {
     vec3 temp = vvdiff(&a->pos, &b->pos);
     return cv3mult(1/sqrt(v3norm2(temp)), &temp);
 };
 
 
-inline double calc_new_pos( vec2 x, double (*U) (double), double m, double dx, double dt ) {
+double calc_new_pos( vec2 x, double (*U) (double), double m, double dx, double dt ) {
 
     #define F(y, dy) ( -der(U, (y), (dy)) )
 
@@ -32,7 +32,7 @@ inline double calc_new_pos( vec2 x, double (*U) (double), double m, double dx, d
     
 }
 
-inline double calc_new_vel( vec2 x, double xtdt, double (*U) (double), double m, double dx ,double dt ) {
+double calc_new_vel( vec2 x, double xtdt, double (*U) (double), double m, double dx ,double dt ) {
 
     #define F(y, dy) ( -der(U, (y), (dy)) )
 
@@ -42,7 +42,7 @@ inline double calc_new_vel( vec2 x, double xtdt, double (*U) (double), double m,
     return vt + dt /2 /m *( F(xt, dx) + F(xtdt, dx) );
 }
 
-inline vec2 step_vel_ver( vec2 x, double (*U) (double), double m, double dx, double dt ) {
+vec2 step_vel_ver( vec2 x, double (*U) (double), double m, double dx, double dt ) {
 
     double new_pos = calc_new_pos(x, U, m, dx, dt);
 
@@ -55,7 +55,7 @@ inline vec2 step_vel_ver( vec2 x, double (*U) (double), double m, double dx, dou
 
 #define FORCE(x) (*(x))(const Particle*, const void *)
 
-inline vec3 calc_new_pos_v3_cforce( const Particle* x, const void* sym, vec3 FORCE(f), double dt ) {
+vec3 calc_new_pos_v3_cforce( const Particle* x, const void* sym, vec3 FORCE(f), double dt ) {
     
     double dt2 = dt *dt;
 
@@ -67,7 +67,7 @@ inline vec3 calc_new_pos_v3_cforce( const Particle* x, const void* sym, vec3 FOR
     return mvvadd( 3, &xt, &velterm, &accterm ); 
 }
 
-inline vec3 calc_new_vel_v3_cforce( const Particle* x, const void* sym, const Particle* newx, vec3 FORCE(f), double dt ) {
+vec3 calc_new_vel_v3_cforce( const Particle* x, const void* sym, const Particle* newx, vec3 FORCE(f), double dt ) {
 
     vec3 vt         = x->vel;
     vec3 f1         = (*f)(x, sym);

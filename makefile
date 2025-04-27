@@ -14,6 +14,16 @@ token = github_pat_11AOCJQSY0Qa4hOFF3ekML_K9lTEPkKNB3gWxwmZoAkXjMEREZtcwcT8jX9oX
 
 cc = gcc
 
+
+build: .FORCE
+	@mkdir -p build; \
+	cd build; \
+	cmake ..; \
+	$(MAKE) -s
+
+
+.FORCE:
+
 all: clean final
 
 final: release

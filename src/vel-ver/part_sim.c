@@ -7,7 +7,7 @@
 
 
 
-inline vec3 get_force_between( const Particle* a, const Particle* b ) {
+vec3 get_force_between( const Particle* a, const Particle* b ) {
 
     double r = sqrt( Pdistance2(a, b) );
 
