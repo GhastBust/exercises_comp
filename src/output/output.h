@@ -20,6 +20,8 @@ void csv_close();
 /// @return number of occurrences
 size_t str_count_sub( char* src, char* sub );
 
+size_t count_ne_percent( char* src );
+
 int g_printf( char* fmt, void* content, size_t size );
 int m_printf( char* fmt, void* content, size_t len, size_t size );
 

@@ -1,4 +1,5 @@
 #include "vec.h"
+#include "test.h"
 
 #include <stdio.h>
 #include <malloc.h>
@@ -209,15 +210,15 @@ void    gv_destroy  ( Gvec* gv ){
 }
 
 int gv_printf_case_1( Gvec* gv, char* format ) {
-    int i;
+    int n;
     u8* gv_ptr = gv->ptr;
 
-    for ( i = 0; i < gv->len; i++ ) {
-        i += g_printf(format, gv_ptr + i, gv->elem_size);
+    for ( int i = 0; i < gv->len; i++ ) {
+        n += g_printf(format, gv_ptr + (i * gv->elem_size), gv->elem_size);
     }
 
-    i += printf("\n");
-    return i;
+    n += printf("\n");
+    return n;
 }
 
 Gvec print_array_fmt( char *fmt, size_t len ) {
@@ -237,7 +238,7 @@ Gvec print_array_fmt( char *fmt, size_t len ) {
      */
 
     Gvec  bbuffer = gv_with_cap(sizeof(char*), len+1);
-    char*  buffer = calloc( strlen(fmt) + len + 2, sizeof(char));
+    char*  buffer = calloc( strlen(fmt) +len +2, sizeof(char));
 
     char* current_buffer = buffer;
     char* fmt_fwrd = fmt;
@@ -262,8 +263,9 @@ Gvec print_array_fmt( char *fmt, size_t len ) {
         current_buffer += word_len + 1; 
 
         //* go foward with the pointers
+        fmt_back = fmt_fwrd;
         fmt_fwrd++;
-        fmt = fmt_back = fmt_fwrd;
+        fmt = fmt_fwrd;
     }
 
     //* push last part of string
@@ -294,14 +296,12 @@ int gv_printf_case_n( Gvec* gv, char *fmt ) {
     return written_chars;
 }
 
+
+
 int gv_printf(Gvec *gv, char *format)
 {
     int char_written = 0;
-
-    size_t n_esc = str_count_sub(format, "%");
-    size_t n_2esc= str_count_sub(format, "%%");
-
-    n_esc -= n_2esc * 2;
+    size_t n_esc = count_ne_percent(format);
     
     if (n_esc == 0) { critical("Symbol %% not found in format string"); }
     if (n_esc == 1) { return gv_printf_case_1(gv, format); }
@@ -309,7 +309,7 @@ int gv_printf(Gvec *gv, char *format)
     if (n_esc == gv->len) { return gv_printf_case_n(gv, format); }
 
     critical("Number of %% symbols not conforming, enter either 1 or %ld (vec len), %ld was given", gv->len, n_esc);
-    return 0;
+    return 1;
 }
 
 

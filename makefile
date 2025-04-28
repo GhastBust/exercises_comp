@@ -21,8 +21,13 @@ build: .FORCE
 	cmake ..; \
 	$(MAKE) -s
 
-
 .FORCE:
+
+
+test: .FORCE build
+	@cd build;\
+	ctest --output-on-failure
+# $(MAKE) -s test 
 
 all: clean final
 

@@ -215,7 +215,7 @@ size_t str_count_sub( char* src, char* sub ) {
         // }
 
         //* substring not found
-        if (!memcmp(src, sub, sublen)) {src++; continue;}
+        if (memcmp(src, sub, sublen)) {src++; continue;}
 
         //* substring found
         src += sublen;
@@ -225,6 +225,14 @@ size_t str_count_sub( char* src, char* sub ) {
     return n;
 }
 
+size_t count_ne_percent(char *src)
+{
+    size_t n_esc = str_count_sub(src, "%");
+    size_t n_2esc= str_count_sub(src, "%%");
+
+    n_esc -= n_2esc * 2;
+    return n_esc;
+}
 
 #define u8   __uint8_t
 #define u16  __uint16_t
