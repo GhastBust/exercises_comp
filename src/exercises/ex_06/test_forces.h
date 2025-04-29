@@ -7,14 +7,15 @@
 #include "../../vel-ver/vel-ver.h"
 #include "../../mymath/mymath.h"
 
-vec3    zero_frc( const Particle*, const void* );
-double  zero_p_pot( Particle*, Particle* );
-double  zero_c_pot( Particle* );
+vec3    zero_c_frc( const Particle* );
+vec3    zero_p_frc( const Particle*, const Particle* );
+double  zero_c_pot( const Particle* );
+double  zero_p_pot( const Particle*, const Particle* );
 
 
 void test_zero_force( void );
 void test_central_grav( void );
-void test_reciprocal_grav2( void );
+void test_reciprocal_grav2p( void );
 void test_reciprocal_grav3( void );
 
 // void force_test( void ) {

@@ -89,7 +89,7 @@ void calc_LJ_fluid_sim( void ) {
 
         for ( int i = 0; i < particles; i++) {
             Particle* p = sym.old_particles + i;
-            Particle new_p = step_vernel_vec3_cforce(p, &sym, LJ_force, dt);
+            Particle new_p = step_vernel_vec3(p, &sym, LJ_force, dt);
     
             sym.new_particles[i] = new_p;
         }

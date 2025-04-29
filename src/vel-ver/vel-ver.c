@@ -53,21 +53,22 @@ vec2 step_vel_ver( vec2 x, double (*U) (double), double m, double dx, double dt 
 }
 
 
-#define FORCE(x) (*(x))(const Particle*, const void *)
+#define CFORCE(x) (*(x))(const Particle*)
+#define PFORCE(x) (*(x))(const Particle*, const Particle*)
 
-vec3 calc_new_pos_v3_cforce( const Particle* x, const void* sym, vec3 FORCE(f), double dt ) {
+vec3 calc_new_pos_v3_cforce( const Particle* x, const void* sym, vec3 CFORCE(fc), vec3 PFORCE(fp), double dt ) {
     
     double dt2 = dt *dt;
 
     vec3 xt         = x->pos;
-    vec3 force      = (*f)(x, sym);
+    vec3 cforce      = (*fc)(x, sym);
     vec3 velterm    = cv3mult(dt, &x->vel);
-    vec3 accterm    = cv3mult( dt2 /(2*x->mass), &force);
+    vec3 accterm    = cv3mult( dt2 /(2*x->mass), &cforce);
 
     return mvvadd( 3, &xt, &velterm, &accterm ); 
 }
 
-vec3 calc_new_vel_v3_cforce( const Particle* x, const void* sym, const Particle* newx, vec3 FORCE(f), double dt ) {
+vec3 calc_new_vel_v3_cforce( const Particle* x, const void* sym, const Particle* newx, vec3 CFORCE(f), double dt ) {
 
     vec3 vt         = x->vel;
     vec3 f1         = (*f)(x, sym);
@@ -79,19 +80,20 @@ vec3 calc_new_vel_v3_cforce( const Particle* x, const void* sym, const Particle*
 }
 
 
-Particle step_vernel_vec3_cforce( 
+Particle step_vernel_vec3( 
     const Particle* x, 
     const void*     sym, 
-    vec3            (*f) (const Particle*, const void *), 
+    vec3            (*fc) (const Particle*),
+    vec3            (*fp) (const Particle*, const Particle*),
     double          dt 
 ) {
     Particle new_part = {0};
 
     new_part.id = x->id;
     new_part.mass = x->mass;
-    new_part.pos = calc_new_pos_v3_cforce(x, sym, f, dt);
+    new_part.pos = calc_new_pos_v3_cforce(x, sym, fc, dt);
 
-    new_part.vel = calc_new_vel_v3_cforce(x, sym, &new_part, f, dt);
+    new_part.vel = calc_new_vel_v3_cforce(x, sym, &new_part, fc, dt);
 
     return new_part;
 }

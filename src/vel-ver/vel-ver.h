@@ -14,7 +14,7 @@ typedef struct Particle {
 } Particle;
 
 vec2        step_vel_ver    ( vec2 x, double (*U) (double), double m, double dx, double dt );
-Particle    step_vernel_vec3_cforce( const Particle *x, const void* sym, vec3 (*f)(const Particle*, const void *), double dt );
+Particle    step_vernel_vec3( const Particle *x, const void* sym, vec3 (*f)(const Particle*, const void *), double dt );
 double      Pdistance2      ( const Particle* a, const Particle* b );
 vec3        direct          ( const Particle* a, const Particle* b );
 int         particle_sprint ( char* buffer, Particle* p, const char* format );

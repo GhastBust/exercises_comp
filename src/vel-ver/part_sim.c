@@ -104,10 +104,10 @@ vec3 LJ_force( const Particle* part, const void* vp_system ) {
 }
 
 
-void step_all_vernel(VernelSimulation *sym, vec3 (*force)(const Particle *, const void *), double dt) {
+void step_all_vernel(VernelSimulation *sym, vec3 (*fc)(const Particle*), vec3 (*fp)(const Particle*, const Particle*), double dt ) {
 
     for ( int i = 0; i < sym->n_particles; i++ ) {
-        Particle new_p = step_vernel_vec3_cforce(sym->old_particles + i, sym, force, dt);
+        Particle new_p = step_vernel_vec3(sym->old_particles + i, sym, fc, dt);
 
         sym->new_particles[i] = new_p;
     }
