@@ -2,6 +2,8 @@
 
 #include <malloc.h>
 #include <math.h>
+#include <stdio.h>
+
 #include "../rand/rand.h"
 #include "../mymath/mymath.h"
 

@@ -7,7 +7,7 @@
 
 void info(char* info, ...) {
     va_list argptr;
-    va_start(argptr, fmt);
+    va_start(argptr, info);
         
     printf("\x1b[94m[+] ");
     vprintf (info, argptr);
