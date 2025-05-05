@@ -1,30 +1,46 @@
 #include "test_forces.h"
 
-double get_pot_nrg_grav( Particle* a, Particle* b ) {
-
-    double r = sqrt(Pdistance2(a, b));
+double p_grav_pot( const Particle* a, const Particle* b ) {
+    double r = sqrt(particle_distance2(a, b));
     return - a->mass * b->mass * 0.01 /r;
 }
 
-vec3 p_grav( const Particle *p, const void *_sym ) {
+vec3 p_grav_frc( const Particle *a, const Particle* b) {
 
-    const VernelSimulation* sym = _sym;
+    double r2 = particle_distance2(a, b);
+    vec3 r_versor = particle_direction_versor(a, b);
 
-    vec3 force = {0};
-    vec3 f;
-    Particle* q;
-    double r2;
+    return cv3mult(-.01*a->mass * b->mass / r2, &r_versor);
+}
 
-    for (int i = 0; i< sym->n_particles; i++) {
-        q = sym->old_particles + i;
-        if (p->id == q->id) {continue;}
+void test_reciprocal_grav2( void ) {
 
-        f = vvdiff(&q->pos, &p->pos);
-        r2 = v3norm2(f) ;
-        f = cv3mult(p->mass * q->mass * 0.01 / r2 / sqrt(r2), &f);
+    #define PARTICLES 2
+    double side_len = 1000;
+    double dt       = 0.0001;
+    double T        = 40;
 
-        force = vvadd(&force, &f);
+    Particle ps[PARTICLES] = {
+        {0, 1, {{ 1,0,0}}, {{0,  .05,0}}},
+        {1, 1, {{-1,0,0}}, {{0, -.05,0}}},
+    };
+
+    Particle np[PARTICLES] = {0};
+    VernelSimulation sym = {
+        .n_particles = PARTICLES, 
+        .side_len = side_len, 
+        .old_particles = ps, 
+        .new_particles = np,
+        .pforce = p_grav_frc,
+        .ppot = p_grav_pot,
+    };
+
+    for ( double t = 0; t < T; t+= dt ) {
+        if ( fmod(t, T/30) < dt) { print_sym(&sym, t); }
+        step_all_vernel( &sym, dt);
     }
 
-    return force;
+    print_sym(&sym, T);
 }
+
+

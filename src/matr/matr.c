@@ -14,12 +14,12 @@ vec3 vminus(vec3 v)
     return new_v;
 }
 
-double v3norm2(vec3 v)
+double v3norm2(const vec3* v )
 {
     double norm = 0;
 
     for( int i = 0; i < 3; i++ ) {
-        norm += v.o[i] * v.o[i];
+        norm += v->o[i] * v->o[i];
     }
 
     return norm;
@@ -38,8 +38,13 @@ vec3 vvadd( const vec3* a, const vec3* b) {
     }
 
     return new_v;
-};
+}
 
+void vvaddeq(vec3 *a, const vec3 *b) {
+    for (int i = 0; i < 3; i++) {
+        a->o[i] += b->o[i];
+    }
+}
 
 vec3 mvvadd( int count,... ) {
 

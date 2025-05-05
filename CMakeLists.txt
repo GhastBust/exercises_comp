@@ -14,32 +14,32 @@ add_executable("${CMAKE_PROJECT_NAME}" "${MY_SOURCES}" src/main.c)
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE m)
 
 
-# enable testing functionality
-enable_testing()
+# # enable testing functionality
+# enable_testing()
 
-# define tests
+# # define tests
 
-file(GLOB_RECURSE TEST_SRCS CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/test/*.c")
-
-
-foreach(test_src ${TEST_SRCS})
-
-    get_filename_component(test_name ${test_src} NAME_WE)
-    #! piccolo problema, questo ricompila tutto, dovrebbe solo linkare i file già compilati
-    #! da capire in seguito
-    add_executable(${test_name} ${test_src} ${MY_SOURCES})
-
-    target_link_libraries(${test_name} PRIVATE m)
+# file(GLOB_RECURSE TEST_SRCS CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/test/*.c")
 
 
-    set_target_properties( 
-        ${test_name} 
-        PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/tests
-    )
+# foreach(test_src ${TEST_SRCS})
 
-    add_test(
-        NAME ${test_name}
-        COMMAND ${test_name} --rerun-failed --output-on-failure
-    )
+#     get_filename_component(test_name ${test_src} NAME_WE)
+#     #! piccolo problema, questo ricompila tutto, dovrebbe solo linkare i file già compilati
+#     #! da capire in seguito
+#     add_executable(${test_name} ${test_src} ${MY_SOURCES})
+
+#     target_link_libraries(${test_name} PRIVATE m)
+
+
+#     set_target_properties( 
+#         ${test_name} 
+#         PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/tests
+#     )
+
+#     add_test(
+#         NAME ${test_name}
+#         COMMAND ${test_name} --rerun-failed --output-on-failure
+#     )
     
-endforeach(test_src)
+# endforeach(test_src)

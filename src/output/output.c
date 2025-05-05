@@ -252,3 +252,29 @@ int g_printf(char *fmt, void *content, size_t size) {
 
     return 0;
 }
+
+int f_fprintf(FILE *file_stream, char *fmt, void *content, size_t size ) {
+    switch (size) {
+    case 1:  return fprintf(file_stream, fmt, *(u8*)content); 
+    case 2:  return fprintf(file_stream, fmt, *(u16*)content);
+    case 4:  return fprintf(file_stream, fmt, *(u32*)content);
+    case 8:  return fprintf(file_stream, fmt, *(u64*)content);
+    case 16: return fprintf(file_stream, fmt, *(u128*)content);
+    default: critical("Can't handle size given, was %ld", size);
+    }
+
+    return 0;
+}
+    
+int f_sprintf(char* buffer, char *fmt, void *content, size_t size ) {
+    switch (size) {
+    case 1:  return sprintf(buffer, fmt, *(u8*)content); 
+    case 2:  return sprintf(buffer, fmt, *(u16*)content);
+    case 4:  return sprintf(buffer, fmt, *(u32*)content);
+    case 8:  return sprintf(buffer, fmt, *(u64*)content);
+    case 16: return sprintf(buffer, fmt, *(u128*)content);
+    default: critical("Can't handle size given, was %ld", size);
+    }
+
+    return 0;
+}

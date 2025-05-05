@@ -8,14 +8,14 @@
 #include "../approx/approx.h"
 
 
-double Pdistance2( const Particle* a, const Particle* b ) {
+double particle_distance2( const Particle* a, const Particle* b ) {
     vec3 temp = vvdiff(&a->pos, &b->pos);
-    return v3norm2(temp);
+    return v3norm2(&temp);
 };
 
-vec3 direct( const Particle* a, const Particle* b ) {
+vec3 particle_direction_versor( const Particle* a, const Particle* b ) {
     vec3 temp = vvdiff(&a->pos, &b->pos);
-    return cv3mult(1/sqrt(v3norm2(temp)), &temp);
+    return cv3mult(1/sqrt(v3norm2(&temp)), &temp);
 };
 
 
@@ -53,25 +53,23 @@ vec2 step_vel_ver( vec2 x, double (*U) (double), double m, double dx, double dt 
 }
 
 
-#define FORCE(x) (*(x))(const Particle*, const void *)
-
-vec3 calc_new_pos_v3_cforce( const Particle* x, const void* sym, vec3 FORCE(f), double dt ) {
+vec3 new_pos_v3( const Particle* x, const VernelSimulation* sym, double dt ) {
     
     double dt2 = dt *dt;
 
     vec3 xt         = x->pos;
-    vec3 force      = (*f)(x, sym);
+    vec3 force      = get_force_on(x, sym);
     vec3 velterm    = cv3mult(dt, &x->vel);
     vec3 accterm    = cv3mult( dt2 /(2*x->mass), &force);
 
     return mvvadd( 3, &xt, &velterm, &accterm ); 
 }
 
-vec3 calc_new_vel_v3_cforce( const Particle* x, const void* sym, const Particle* newx, vec3 FORCE(f), double dt ) {
+vec3 new_vel_v3( const Particle* x, const VernelSimulation* sym, const Particle* newx, double dt ) {
 
     vec3 vt         = x->vel;
-    vec3 f1         = (*f)(x, sym);
-    vec3 f2         = (*f)(newx, sym);
+    vec3 f1         = get_force_on(x, sym);
+    vec3 f2         = get_force_on(newx, sym);
     vec3 force      = vvadd( &f1, &f2 );
     vec3 accterm    = cv3mult( dt /2 /x->mass, &force);
 
@@ -79,19 +77,18 @@ vec3 calc_new_vel_v3_cforce( const Particle* x, const void* sym, const Particle*
 }
 
 
-Particle step_vernel_vec3_cforce( 
+Particle step_vernel_vec3( 
     const Particle* x, 
-    const void*     sym, 
-    vec3            (*f) (const Particle*, const void *), 
-    double          dt 
+    const VernelSimulation* sym, 
+    double          dt
 ) {
     Particle new_part = {0};
 
     new_part.id = x->id;
     new_part.mass = x->mass;
-    new_part.pos = calc_new_pos_v3_cforce(x, sym, f, dt);
+    new_part.pos = new_pos_v3(x, sym, dt);
 
-    new_part.vel = calc_new_vel_v3_cforce(x, sym, &new_part, f, dt);
+    new_part.vel = new_vel_v3(x, sym, &new_part, dt);
 
     return new_part;
 }
@@ -107,7 +104,7 @@ IOption find_str( const char* haystack, const char* needle ) {
 }
 
 
-int particle_sprint( char* buffer, Particle* p, const char* format ) {
+int particle_sprint( char* buffer, const Particle* p, const char* format ) {
 
     IOption id_index  = find_str(format, "{id}");
     IOption pos_index = find_str(format, "{pos}");
@@ -145,7 +142,7 @@ int particle_sprint( char* buffer, Particle* p, const char* format ) {
 }
 
 
-void particle_print( Particle* p, const char* format ) {
+int particle_print( const Particle* p, const char* format ) {
 
     char buffer[150] = {};
 
@@ -181,6 +178,6 @@ void particle_print( Particle* p, const char* format ) {
         j++;
     }
 
-    printf("%s", buffer);
+    return printf("%s", buffer);
 }
 

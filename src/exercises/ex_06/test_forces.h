@@ -7,10 +7,6 @@
 #include "../../vel-ver/vel-ver.h"
 #include "../../mymath/mymath.h"
 
-vec3    zero_frc( const Particle*, const void* );
-double  zero_p_pot( Particle*, Particle* );
-double  zero_c_pot( Particle* );
-
 
 void test_zero_force( void );
 void test_central_grav( void );

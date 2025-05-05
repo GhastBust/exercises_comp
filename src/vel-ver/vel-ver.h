@@ -5,7 +5,6 @@
 
 #include "../matr/matr.h"
 
-
 typedef struct Particle {
     int     id;
     double  mass;
@@ -13,29 +12,46 @@ typedef struct Particle {
     vec3    vel;
 } Particle;
 
-vec2        step_vel_ver    ( vec2 x, double (*U) (double), double m, double dx, double dt );
-Particle    step_vernel_vec3_cforce( const Particle *x, const void* sym, vec3 (*f)(const Particle*, const void *), double dt );
-double      Pdistance2      ( const Particle* a, const Particle* b );
-vec3        direct          ( const Particle* a, const Particle* b );
-int         particle_sprint ( char* buffer, Particle* p, const char* format );
-void        particle_print  ( Particle* p,  const char* format );
-
-
 typedef struct VernelSimulation {
-    int     n_particles;
-    double  size_len;
+    int         n_particles;
+    double      side_len;
     Particle*   old_particles;
     Particle*   new_particles;
+    vec3      (*cforce )(const Particle*);
+    vec3      (*pforce )(const Particle*, const Particle*);
+    double    (*cpot   )(const Particle*);
+    double    (*ppot   )(const Particle*, const Particle*);
 } VernelSimulation;
 
+vec2        step_vel_ver     ( vec2 x, double (*U) (double), double m, double dx, double dt );
+Particle    step_vernel_vec3 ( const Particle *x, const VernelSimulation* sym, double dt );
 
-void        swap_old_new( VernelSimulation* sym );
-VernelSimulation init_simulation( size_t num_particles, double mass, double side_len, double init_square_len, int seed, double sigma );
-vec3        LJ_force( const Particle* part, const void* vp_system );
-void        step_all_vernel ( VernelSimulation* sym, vec3 (*force)(const Particle*, const void *), double dt );
-void        print_sym( VernelSimulation* sym, double time, double (*Uc)(Particle*), double (*Up)(Particle*, Particle*) );
-double      get_kin_nrg( Particle* p );
-double      calc_nrg( VernelSimulation* sym, double (*Uc)(Particle*), double (*Uf)(Particle*, Particle*) );
+double      particle_distance2        ( const Particle* a, const Particle* b );
+vec3        particle_direction_versor ( const Particle* a, const Particle* b );
 
+int         particle_print  ( const Particle* p,  const char* format );
+int         particle_sprint ( char* buffer, const Particle* p, const char* format );
+
+
+VernelSimulation init_simulation( 
+    size_t  num_particles, 
+    double  side_len,
+    double  mass, 
+    int     seed, 
+    double  sigma,
+    vec3    (*cforce)(const Particle*),
+    vec3    (*pforce)(const Particle*, const Particle*),
+    double  (*cpot)  (const Particle*),
+    double  (*ppot)  (const Particle*, const Particle*)
+);
+
+void        step_all_vernel (   VernelSimulation* sym, double dt );
+
+vec3        get_force_on     ( const Particle* particle, const VernelSimulation* sym);
+double      get_potential_on ( const Particle* particle, const VernelSimulation* sym);
+double      get_kin_nrg      ( const Particle* p );
+double      get_energy       ( const VernelSimulation* sym );
+
+void        print_sym        ( const VernelSimulation* sym, double time );
 
 #endif//__VEL_VER_H__

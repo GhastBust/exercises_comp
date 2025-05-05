@@ -21,8 +21,9 @@ typedef struct vec3 {
 
 
 vec3    vminus( vec3 v ); 
-double  v3norm2( vec3 v );
+double  v3norm2( const vec3* v );
 vec3    vvadd ( const vec3* a, const vec3* b);
+void    vvaddeq( vec3* a, const vec3* b );
 vec3    mvvadd( int count, ... );
 vec3    vvdiff( const vec3* a, const vec3* b);
 double  vvscal( vec3 a, vec3 b);

@@ -26,10 +26,10 @@ int main()
 
     // assert( gv.len == gv.cap );
 
-    #define LEN 25
+    #define LEN1 25
 
     // Gvec gv = gv_with_cap(sizeof(char), LEN);
-    char str[LEN] = "yo %% . %d .. %e .. %% .";
+    char str[LEN1] = "yo %% . %d .. %e .. %% .";
 
     Gvec ret = print_array_fmt(str, 2);
 
@@ -40,14 +40,14 @@ int main()
     assert( ret.len == 3 );
     assert( ret.cap == 3 );
 
-    Gvec yeyo = {.cap = LEN, .len = LEN, .elem_size = 1, .ptr = str};
+    Gvec yeyo = {.cap = LEN1, .len = LEN1, .elem_size = 1, .ptr = str};
 
     // gv_printf(&yeyo, "%c, ");
 
     #define LEN 5
-    char ss[LEN] = "CIAO";
+    char ss[LEN1] = "CIAO";
 
-    Gvec yoyo = {.cap = LEN, .len = LEN, .elem_size = 1, .ptr = ss};
+    Gvec yoyo = {.cap = LEN1, .len = LEN1, .elem_size = 1, .ptr = ss};
 
     // gv_printf( &yoyo, "%hhu, %hhu, %hhu, %hhu, %hhu fine");
 
