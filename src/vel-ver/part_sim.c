@@ -2,22 +2,23 @@
 
 #include <malloc.h>
 #include <math.h>
+
+#include "../diag/diag.h"
 #include "../rand/rand.h"
 #include "../mymath/mymath.h"
 
 
-
 void __swap_old_new( VernelSimulation* sym ) {
-    Particle* temp = sym->old_particles;
-    sym->old_particles = sym->new_particles;
-    sym->new_particles = temp;
+    Particle* temp = sym->particles;
+    sym->particles = sym->cache;
+    sym->cache = temp;
 }
 
 void __mirror_particles( VernelSimulation* sym ) {
 
     for ( int i = 0; i < sym->n_particles; i++) {
         for (int j = 0; j < 3; j++) {
-            sym->old_particles[i].pos.o[j] = fmod(sym->old_particles[i].pos.o[j] + sym->side_len, sym->side_len * 2 ) - sym->side_len;
+            sym->particles[i].pos.o[j] = fmod(sym->particles[i].pos.o[j] + sym->side_len, sym->side_len * 2 ) - sym->side_len;
         }
     }
 
@@ -52,7 +53,7 @@ VernelSimulation init_simulation(
 
         p1 = (vec3){{
             step * (i%pps),
-            step * ((i/pps)%pps2),
+            step * ((i%pps2)/pps),
             step * (i/pps2)
         }};
 
@@ -69,8 +70,8 @@ VernelSimulation init_simulation(
     return (VernelSimulation){ 
         .n_particles    = num_particles, 
         .side_len       = side_len, 
-        .old_particles  = parray,
-        .new_particles  = parray+num_particles,    
+        .particles  = parray,
+        .cache  = parray+num_particles,    
         .cforce = cforce,   .pforce = pforce,
         .cpot   = cpot,     .ppot = ppot
     };
@@ -90,9 +91,9 @@ vec3 __get_particle_force_on(const Particle* particle, const VernelSimulation* s
     if ( sym->pforce == NULL ) { return total_force; }
 
     for( size_t i = 0; i < sym->n_particles; i++) {
-        if ( particle->id == sym->old_particles[i].id ) {continue;} 
+        if ( particle->id == sym->particles[i].id ) {continue;} 
 
-        i_force = (*sym->pforce)(particle, sym->old_particles + i);
+        i_force = (*sym->pforce)(particle, sym->particles + i);
 
         vvaddeq(&total_force, &i_force);
     }
@@ -119,9 +120,9 @@ double __get_particle_potential_on(const Particle* particle, const VernelSimulat
     double total_pot = 0;
     
     for( size_t i = 0; i < sym->n_particles; i++) {
-        if ( particle->id == sym->old_particles[i].id ) {continue;} 
+        if ( particle->id == sym->particles[i].id ) {continue;} 
 
-        total_pot += (*sym->ppot)(particle, sym->old_particles + i);
+        total_pot += (*sym->ppot)(particle, sym->particles + i);
     }
 
     return total_pot;
@@ -135,10 +136,9 @@ double get_potential_on(const Particle *particle, const VernelSimulation *sym)
 
 void step_all_vernel(VernelSimulation *sym, double dt) {
 
-    for ( int i = 0; i < sym->n_particles; i++ ) {
-        Particle new_p = step_vernel_vec3(sym->old_particles + i, sym, dt);
-
-        sym->new_particles[i] = new_p;
+    for ( size_t i = 0; i < sym->n_particles; i++ ) {
+        Particle new_p = step_vernel_vec3(sym->particles + i, sym, dt);
+        sym->cache[i] = new_p;
     }
 
     __swap_old_new(sym);
@@ -149,7 +149,7 @@ void print_sym( const VernelSimulation* sym, double time ) {
     printf("%7.2f, ", time);
     for (int i = 0; i < sym->n_particles; i++) {
         // particle_print(sym->old_particles+i, "{pos}, {vel}, ");
-        particle_print(sym->old_particles+i, "{pos}, ");
+        particle_print(sym->particles+i, "{pos}, ");
     }
     printf("% .3e\n", get_energy(sym));
 }
@@ -167,12 +167,12 @@ double get_energy( const VernelSimulation* sym ) {
 
     for (int i = 0; i < sym->n_particles; i++) {
 
-        K += get_kin_nrg( sym->old_particles + i );
-        U += __get_central_pot_on( sym->old_particles + i, sym);
+        K += get_kin_nrg( sym->particles + i );
+        U += __get_central_pot_on( sym->particles + i, sym);
 
         if ( sym->ppot == NULL ) {continue;}
         for (int j = i+1; j < sym->n_particles; j++ ) {
-            U += (*sym->ppot)( sym->old_particles + i, sym->old_particles + j);
+            U += (*sym->ppot)( sym->particles + i, sym->particles + j);
         }
     }
 

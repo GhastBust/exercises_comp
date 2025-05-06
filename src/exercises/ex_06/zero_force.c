@@ -22,8 +22,8 @@ void test_zero_force( void ) {
     VernelSimulation sym = {
         .n_particles = PARTICLES, 
         .side_len = side_len, 
-        .old_particles = ps, 
-        .new_particles = np,
+        .particles = ps, 
+        .cache = np,
     };
 
     for ( double t = 0; t < T; t+= dt ) {

@@ -28,8 +28,8 @@ void test_central_grav( void ) {
     VernelSimulation sym = {
         .n_particles = PARTICLES,
         .side_len = side_len,
-        .old_particles = ps,
-        .new_particles = n,
+        .particles = ps,
+        .cache = n,
         .cforce = c_grav_frc,
         .cpot = c_grav_pot,
     };

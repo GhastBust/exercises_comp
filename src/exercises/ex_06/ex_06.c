@@ -9,9 +9,11 @@
 #include "../../matr/matr.h"
 #include "../../mymath/mymath.h"
 
-// static const double epsilon = 1;
-// static const double sigma = 1;
-// static const double kB = 1;
+static const double epsilon = 1;
+static const double sigma = 1;
+static const double kB = 1;
+static const double side_len = 100;
+
 
 
 double harmonic_pot( double q ) {
@@ -53,7 +55,7 @@ double calc_temp( const VernelSimulation* sym ) {
     double temp = 0;
 
     for (size_t i = 0; i < sym->n_particles; i++) {
-        temp += get_kin_nrg(sym->old_particles + i);
+        temp += get_kin_nrg(sym->particles + i);
     }
 
     return temp / 3 / sym->n_particles;
@@ -71,10 +73,29 @@ vec3 LJ_force( const Particle* a, const Particle* b ) {
 
     vec3 force3 = particle_direction_versor(a, b);
     
-    force3 = cv3mult(force, &force3);
+    cv3multeq(force, &force3);
 
     return force3;
 };
+
+
+double LJ_pot( const Particle* a, const Particle* b ) {
+
+    double r2 = particle_distance2(a, b);
+
+    if( r2 >= side_len * side_len) { return 0; }
+
+    double sigma_r_6  = int_pow(sigma*sigma/r2, 3);
+    double sigma_r_12 = sigma_r_6 * sigma_r_6;
+
+    double true_pot = ( 4 * epsilon * (sigma_r_12 - sigma_r_6) );
+
+    const double sigma_R_6 = int_pow(sigma/side_len, 6);
+    const double sigma_R_12 = sigma_R_6*sigma_R_6;
+    const double C = 4 * epsilon * ( sigma_R_6 - sigma_R_12 ); 
+
+    return true_pot + C;
+}
 
 
 // vec3 LJ_force( const Particle* part, const void* vp_system ) {
@@ -98,29 +119,45 @@ vec3 LJ_force( const Particle* a, const Particle* b ) {
 //     return force_on_particle;
 // }
 
-// void calc_LJ_fluid_sim( void ) {
+void pprintf(VernelSimulation* sym) {
+    printf("temp = %f", calc_temp(sym));
+    printf("\tnrg = %e",  get_energy(sym));
+    printf("\n");
+}
 
-//     double starting_temp = 1.1;
-//     int particles   = 1000;
-//     double mass     = 1;
-//     double side_len = 10;
-//     double init_sq  = 1;
-//     int seed        = 65412752;
-//     int cycles      = 50000;
-//     double dt       = 0.001;
+
+void calc_LJ_fluid_sim( void ) {
+
+    double starting_temp = 10000000;
+    // double starting_temp = 1.1;
+    int particles   = 1000;
+    double mass     = 1;
+    int seed        = 65412752;
+    int cycles      = 5000;
+    double dt       = 0.000001;
     
-//     double T        = cycles * dt;
-//     double sigma    = sqrt(starting_temp / mass);
+    double T        = cycles * dt;
+    double sigma    = sqrt(starting_temp / mass);
 
-    // VernelSimulation sym = init_simulation( particles, mass, side_len, init_sq, seed, sigma);
+    VernelSimulation sym = init_simulation( 
+        particles, side_len, mass, seed, sigma, 
+        NULL, LJ_force, NULL, LJ_pot
+    );
 
-//     for ( double t = 0; t < T; t+= dt ) {
+    step_all_vernel_threads(&sym, pprintf, T, dt);
+
+    // for ( size_t i = 0; i < particles; i++) {
+    //     particle_print(sym.particles+i, "{pos}\n");
+    // }
+
+    // for ( double t = 0; t < T; t+= dt ) {
+
+    //     printf("temp = %f", calc_temp(&sym));
+    //     printf("\tnrg = %e",  get_energy(&sym));
+    //     printf("\n");
+
+    //     step_all_vernel( &sym, dt); 
+    // }
 
 
-//         printf("%f\n", calc_temp(&sym));
-
-//         calc_nrg(&sym, zero_c_pot, LJ_force);
-
-//         step_all_vernel( &sym, zero_frc, dt);
-//     }
-// }
+}

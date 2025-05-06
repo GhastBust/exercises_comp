@@ -18,7 +18,7 @@ cc = gcc
 build: .FORCE
 	@mkdir -p build; \
 	cd build; \
-	cmake ..; \
+	cmake -DCMAKE_BUILD_TYPE=Release ..; \
 	$(MAKE) -s
 
 .FORCE:

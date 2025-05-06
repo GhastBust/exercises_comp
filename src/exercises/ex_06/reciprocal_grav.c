@@ -29,8 +29,8 @@ void test_reciprocal_grav2( void ) {
     VernelSimulation sym = {
         .n_particles = PARTICLES, 
         .side_len = side_len, 
-        .old_particles = ps, 
-        .new_particles = np,
+        .particles = ps, 
+        .cache = np,
         .pforce = p_grav_frc,
         .ppot = p_grav_pot,
     };

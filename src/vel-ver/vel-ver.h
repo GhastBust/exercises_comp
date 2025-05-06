@@ -16,8 +16,8 @@ typedef struct Particle {
 typedef struct VernelSimulation {
     int         n_particles;
     double      side_len;
-    Particle*   old_particles;
-    Particle*   new_particles;
+    Particle*   particles;
+    Particle*   cache;
     vec3      (*cforce )(const Particle*);
     vec3      (*pforce )(const Particle*, const Particle*);
     double    (*cpot   )(const Particle*);
@@ -47,7 +47,12 @@ VernelSimulation init_simulation(
     double  (*ppot)  (const Particle*, const Particle*)
 );
 
-void        step_all_vernel (   VernelSimulation* sym, double dt );
+
+void __swap_old_new         ( VernelSimulation* sym );
+void __mirror_particles     ( VernelSimulation* sym );
+void        step_all_vernel ( VernelSimulation* sym, double dt );
+void step_all_vernel_threads( VernelSimulation *sym, void (*init_task)(VernelSimulation*), double T, double dt);
+
 
 vec3        get_force_on     ( const Particle* particle, const VernelSimulation* sym);
 double      get_potential_on ( const Particle* particle, const VernelSimulation* sym);
