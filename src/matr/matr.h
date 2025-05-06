@@ -22,12 +22,20 @@ typedef struct vec3 {
 
 vec3    vminus( vec3 v ); 
 double  v3norm2( const vec3* v );
+
 vec3    vvadd ( const vec3* a, const vec3* b);
 void    vvaddeq( vec3* a, const vec3* b );
 vec3    mvvadd( int count, ... );
+
 vec3    vvdiff( const vec3* a, const vec3* b);
-double  vvscal( vec3 a, vec3 b);
+void    vvdiffeq( vec3* a, const vec3* b);
+
+double  vvscal( const vec3* a, const vec3* b );
+
 vec3    cv3mult( double c, const vec3* v);
+void    cv3multeq( double c, vec3* v);
+
+//------------------------------------------------------------------------------
 
 vec2    vadd ( vec2 a, vec2 b);
 mat2x2  mfrom( double arr[4] );

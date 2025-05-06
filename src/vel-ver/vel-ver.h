@@ -12,6 +12,7 @@ typedef struct Particle {
     vec3    vel;
 } Particle;
 
+
 typedef struct VernelSimulation {
     int         n_particles;
     double      side_len;
@@ -22,6 +23,7 @@ typedef struct VernelSimulation {
     double    (*cpot   )(const Particle*);
     double    (*ppot   )(const Particle*, const Particle*);
 } VernelSimulation;
+
 
 vec2        step_vel_ver     ( vec2 x, double (*U) (double), double m, double dx, double dt );
 Particle    step_vernel_vec3 ( const Particle *x, const VernelSimulation* sym, double dt );

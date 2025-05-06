@@ -72,14 +72,20 @@ vec3 vvdiff( const vec3* a, const vec3* b) {
     }
 
     return new_v;
+}
+
+void vvdiffeq(vec3 *a, const vec3 *b) {
+    for (int i = 0; i < 3; i++) {
+        a->o[i] -= b->o[i];
+    }
 };
 
-double vvscal( vec3 a, vec3 b) {
+double vvscal( const vec3* a, const vec3* b) {
 
     double prod = 0;
 
     for (int i = 0; i < 3; i++) {
-        prod += a.o[i] * b.o[i];
+        prod += a->o[i] * b->o[i];
     }
 
     return prod;
@@ -94,7 +100,13 @@ vec3 cv3mult(double c, const vec3* v)
     }
 
     return new_v;
-};
+}
+
+void cv3multeq(double c, vec3 *v) {
+    for (int i = 0; i < 3; i++) {
+        v->o[i] *= c;
+    }
+}
 
 mat2x2 mfrom( double arr[4] ) {
     mat2x2 M = {{ arr[0], arr[1], arr[2], arr[3] }};

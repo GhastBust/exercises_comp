@@ -8,7 +8,7 @@ vec3 c_grav_frc( const Particle *p ) {
     return force;
 }
 
-double c_grav_pot( Particle* p ) {
+double c_grav_pot( const Particle* p ) {
     return - p->mass /100 / sqrt( v3norm2(&p->pos) );
 }
 

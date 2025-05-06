@@ -50,19 +50,17 @@ void calc_harmonic( void ) {
 
 double calc_temp( const VernelSimulation* sym ) {
 
-    double temperatue = 0;
+    double temp = 0;
 
-    for (int i = 0; i < sym->n_particles; i++) {
-        temperatue = v3norm2(&sym->old_particles[i].vel) * sym->old_particles[i].mass;
+    for (size_t i = 0; i < sym->n_particles; i++) {
+        temp += get_kin_nrg(sym->old_particles + i);
     }
 
-    temperatue /= 3 *sym->n_particles;
-
-    return temperatue;
+    return temp / 3 / sym->n_particles;
 }
 
 
-vec3 get_force_between( const Particle* a, const Particle* b ) {
+vec3 LJ_force( const Particle* a, const Particle* b ) {
 
     double r = sqrt( particle_distance2(a, b) );
 
