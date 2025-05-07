@@ -15,37 +15,61 @@
 #define THREADS 8
 
 typedef struct Signal {
-    Mutex* mutex;
-    Cond*  cond;
-    Flag*  is_ready;
+    Mutex   mutex;
+    Cond    cond;
+    size_t  current_done;
+    size_t  threads;
 } Signal;
+
+
+// #define SIGNAL_INITIALIZER ((Signal){{ PTHREAD_MUTEX_INITIALIZER, PTHREAD_COND_INITIALIZER, 0, THREADS }})
+
+void init_signal( Signal* signal ) {
+    signal->cond = PTHREAD_COND_INITIALIZER;
+    signal->current_done = 0;
+    signal->mutex = PTHREAD_MUTEX_INITIALIZER;
+    signal->threads = THREADS+1;
+};
+
+void wait_or_release_all( Signal* signal ) {
+    lock(&signal->mutex);
+
+    signal->current_done++;
+
+    if( signal->current_done == signal->threads ) {
+        signal->current_done = 0;
+        pthread_cond_broadcast(&signal->cond);
+    } else { 
+        pthread_cond_wait(&signal->cond, &signal->mutex);
+    }
+
+    unlock(&signal->mutex);
+}
 
 typedef struct ThreadArgs {
     VernelSimulation* sym;
-    Signal* signal;
-    Mutex*  mutex;
+    Signal* pos_done;
     double  dt;
-    bool*   can_exe;
     bool*   stop;
     size_t  start;
     size_t  len;
 } ThreadArgs;
 
 
-void 
 
-void wait_ready(Signal* signal) {
-    pthread_mutex_lock(signal->mutex);
-    while(!*signal->flag) { pthread_cond_wait(signal->cond, signal->mutex); }
-    pthread_mutex_unlock(signal->mutex);
-}
 
-void set_all_ready(Signal* signal) {
-    pthread_mutex_lock(signal->mutex);
-    *signal->flag = true;
-    pthread_cond_broadcast(signal->cond);
-    pthread_mutex_unlock(signal->mutex);
-}
+// void wait_ready(Signal* signal) {
+//     pthread_mutex_lock(signal->mutex);
+//     while(!*signal->flag) { pthread_cond_wait(signal->cond, signal->mutex); }
+//     pthread_mutex_unlock(signal->mutex);
+// }
+
+// void set_all_ready(Signal* signal) {
+//     pthread_mutex_lock(signal->mutex);
+//     *signal->flag = true;
+//     pthread_cond_broadcast(signal->cond);
+//     pthread_mutex_unlock(signal->mutex);
+// }
 
 void init_all( Mutex* mutexs ) {
     for (int i = 0; i < THREADS; i++ ) { pthread_mutex_init(mutexs+i, NULL); }
@@ -69,26 +93,18 @@ void* __step_some_vernel( void* v_arg ) {
 
     ThreadArgs* arg = (ThreadArgs*) v_arg; 
 
-    printf("thread n: %ld, try first lock\n", arg->start / arg->len );
-    lock(arg->mutex);
-    printf("thread n: %ld, first lock done\n", arg->start / arg->len );
+    // printf("thread n: %ld, try first lock\n", arg->start / arg->len );
+    // lock(arg->mutex);
+    // printf("thread n: %ld, first lock done\n", arg->start / arg->len );
     while (!*arg->stop) {
 
 
         for ( size_t i = arg->start; i < arg->start + arg->len; i++ ) {
-            Particle new_p = step_vernel_vec3(arg->sym->particles + i, arg->sym, arg->dt);
+            Particle new_p = step_vernel_vec3(arg->sym->particles+i, arg->sym, arg->dt);
             arg->sym->cache[i] = new_p;
         }
-        
-        printf("thread n: %ld, try unlock\n", arg->start / arg->len );
-        unlock(arg->mutex);
-        printf("thread n: %ld, unlock done\n", arg->start / arg->len );
 
-        // sleep(1);
-
-        printf("thread n: %ld, try lock\n", arg->start / arg->len );
-        lock(arg->mutex);
-        printf("thread n: %ld, lock done\n", arg->start / arg->len );
+        wait_or_release_all(arg->pos_done);
     }
 
     printf("returning thread n: %ld\n", arg->start / arg->len);
@@ -124,8 +140,6 @@ void step_all_vernel_threads(VernelSimulation *sym, void (*init_task)(VernelSimu
 
         pthread_create(threads+i, NULL, __step_some_vernel, args+i);
     }
-
-    sleep(1);
 
     unlock_all(mutexs);
 
