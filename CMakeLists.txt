@@ -10,6 +10,10 @@ set(CMAKE_C_FLAGS_TEST_INIT "--rerun-failed --output-on-failure")
 file(GLOB_RECURSE MY_SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/*/*.c")
 add_executable("${CMAKE_PROJECT_NAME}" "${MY_SOURCES}" src/main.c)
 
+if (WIN32)
+    target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE "include/pthreads")
+endif (WIN32)
+
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE m)
 target_compile_options(${CMAKE_PROJECT_NAME} PRIVATE -O3)
 
