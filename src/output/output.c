@@ -234,10 +234,10 @@ size_t count_ne_percent(char *src)
     return n_esc;
 }
 
-#define u8   __uint8_t
-#define u16  __uint16_t
-#define u32  __uint32_t
-#define u64  __uint64_t
+#define u8   unsigned char
+#define u16  unsigned short
+#define u32  unsigned int
+#define u64  unsigned long long
 #define u128 __uint128_t
 
 int g_printf(char *fmt, void *content, size_t size) {

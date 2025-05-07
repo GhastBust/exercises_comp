@@ -15,10 +15,19 @@ token = github_pat_11AOCJQSY0Qa4hOFF3ekML_K9lTEPkKNB3gWxwmZoAkXjMEREZtcwcT8jX9oX
 cc = gcc
 
 
+OSFLAG :=
+ifeq ($(OS),Windows_NT) 
+	OSFLAG += -G"MSYS Makefiles"
+else 	
+	OSFLAG += -G"Unix Makefiles"
+endif
+
+
+
 build: .FORCE
 	@mkdir -p build; \
 	cd build; \
-	cmake -DCMAKE_BUILD_TYPE=Release ..; \
+	cmake $(OSFLAG) -DCMAKE_BUILD_TYPE=Release ..; \
 	$(MAKE) -s
 
 .FORCE:

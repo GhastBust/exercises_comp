@@ -2,6 +2,7 @@
 
 #include <malloc.h>
 #include <math.h>
+#include <stdio.h>
 
 #include "../diag/diag.h"
 #include "../rand/rand.h"
